@@ -1,0 +1,60 @@
+
+# 01. Version Control
+.git/
+.github/
+
+# 02. Development Environments
+.venv/
+venv/
+**/node_modules/
+
+# 03. Credentials
+**/.env
+**/.env.*
+**/.envrc
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/credentials.json
+**/service-account*.json
+**/secrets/
+**/.npmrc
+**/.pypirc
+
+# 04. Local Data and Models
+data/
+models/
+**/*.db
+**/*.db-*
+**/*.sqlite*
+**/*.gguf
+
+# 05. Generated Python Files
+**/__pycache__/
+**/*.pyc
+**/*.egg-info/
+**/.pytest_cache/
+**/.ruff_cache/
+**/.ipynb_checkpoints/
+**/.coverage
+**/htmlcov/
+
+# 06. Frontend Build Artifacts
+frontend/dist/
+frontend/coverage/
+frontend/playwright-report/
+frontend/test-results/
+
+# 07. Exploration
+exploration/
+
+# 08. Editor and Operating System
+.vscode/
+.idea/
+**/.DS_Store
+
+# 09. Runtime Files
+logs/
+tmp/
+**/*.log
