@@ -1,0 +1,99 @@
+
+# ============================================================
+# CodePulse - Engineering Intelligence Platform
+# Python Project Configuration
+# ============================================================
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+
+# 01. Project Metadata
+# ------------------------------------------------------------
+
+[project]
+name = "codepulse"
+version = "0.1.0"
+description = "AI-powered engineering intelligence platform"
+readme = "README.md"
+requires-python = ">=3.14,<3.15"
+
+
+# 02. Application Dependencies
+# ------------------------------------------------------------
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "httpx",
+    "pydantic",
+    "pydantic-settings",
+    "python-dotenv",
+]
+
+
+# 03. Optional Dependencies
+# ------------------------------------------------------------
+
+[project.optional-dependencies]
+
+exploration = [
+    "pandas",
+    "jupyter",
+    "ipykernel",
+]
+
+development = [
+    "pytest",
+    "pytest-cov",
+    "pytest-asyncio",
+    "ruff",
+]
+
+
+# 04. Python Package Discovery
+# ------------------------------------------------------------
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["backend*"]
+exclude = ["backend.tests*"]
+namespaces = false
+
+
+# 05. Code Quality and Formatting
+# ------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+
+# 06. Automated Backend Testing
+# ------------------------------------------------------------
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+
+# 07. Test Coverage Configuration
+# ------------------------------------------------------------
+
+[tool.coverage.run]
+source = ["backend"]
+omit = ["backend/tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
