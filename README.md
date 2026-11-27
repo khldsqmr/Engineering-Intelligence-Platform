@@ -74,7 +74,7 @@ Deterministic analytical requests do not require LLM inference.
 | Backend | Python 3.14, FastAPI, Pydantic, HTTPX |
 | Data Engineering | Python, SQL, Medallion Architecture |
 | Persistence | SQLite |
-| AI Inference | Ollama, Qwen 2.5 |
+| AI Inference | Ollama, Qwen 3 |
 | Frontend | React, TypeScript, Vite |
 | Deployment | Docker Compose, Nginx |
 | Testing | Pytest |
@@ -93,6 +93,13 @@ Ollama is hosted locally and is not provisioned by Docker Compose.
 
 ### 5.2 Configure the environment
 
+Clone the public repository:
+
+```bash
+git clone https://github.com/khldsqmr/Engineering-Intelligence-Platform.git
+cd Engineering-Intelligence-Platform
+```
+
 From the repository root:
 
 ```bash
@@ -100,14 +107,29 @@ cp .env.example .env
 mkdir -p data
 ```
 
-Update `.env` with a read-only GitHub token.
+Create a read-only GitHub token:
+
+1. Open [GitHub fine-grained token settings](https://github.com/settings/personal-access-tokens/new).
+2. Enter a descriptive token name and expiration date.
+3. Select your GitHub account as the resource owner.
+4. Select public repository access.
+5. Leave additional permissions unselected.
+6. Generate the token and copy it into the local `.env` file.
+
+Public repository ingestion does not require repository write
+permissions or private repository access.
+
+The reviewer should use their own token. No application
+credentials are distributed with the repository.
+
+Update `.env` with the generated token:
 
 ```dotenv
 GITHUB_TOKEN=your_read_only_token
 GITHUB_REPOSITORY=apache/airflow
 DATABASE_PATH=data/eip.db
 OLLAMA_BASE_URL=http://127.0.0.1:11434
-OLLAMA_MODEL=qwen2.5:7b
+OLLAMA_MODEL=qwen3:4b-instruct
 APP_ENV=development
 LOG_LEVEL=INFO
 ```
@@ -119,7 +141,7 @@ Never commit the populated `.env` file.
 Start Ollama on the host and download the configured model:
 
 ```bash
-ollama pull qwen2.5:7b
+ollama pull qwen3:4b-instruct
 ```
 
 Verify that Ollama is available:
@@ -176,7 +198,40 @@ repository activity and GitHub API quota.
 The SQLite database is persisted in the local data directory
 and remains available across container restarts.
 
-### 5.6 Access the application
+### 5.6 Bootstrap historical AI intelligence (optional)
+
+The data pipelines populate historical analytical facts.
+AI intelligence history is initially empty in a fresh installation.
+
+To generate intelligence for recent supported reporting periods:
+
+```bash
+docker compose exec backend python -m backend.pipelines.intelligence_bootstrap --periods 3
+```
+
+The utility discovers supported reporting periods dynamically
+and processes them chronologically, from oldest to newest.
+
+Only periods within the available enrichment window are selected.
+The number of processed periods may be smaller than requested.
+
+Existing compatible intelligence is reused from the cache.
+New candidates pass through the standard numerical grounding,
+evidence validation and evaluation policies.
+
+Approved intelligence may contribute to subsequent historical
+reasoning. Rejected candidates remain available for auditing.
+
+This step requires local model inference and is optional.
+Generation time and approval outcomes depend on model behavior
+and available evidence.
+
+Existing cached narratives are not automatically regenerated
+when additional historical intelligence becomes available.
+Use the narrative generation endpoint with forceRefresh set
+to true when refreshed historical context is required.
+
+### 5.7 Access the application
 
 | Service | URL |
 |---|---|
@@ -185,7 +240,7 @@ and remains available across container restarts.
 | API Documentation | http://127.0.0.1:8001/docs |
 | OpenAPI Specification | http://127.0.0.1:8001/openapi.json |
 
-### 5.7 Stop the application
+### 5.8 Stop the application
 
 ```bash
 docker compose down

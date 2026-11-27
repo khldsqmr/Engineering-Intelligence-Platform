@@ -30,6 +30,7 @@ def test_structured_generation():
         payload = json.loads(request.content)
 
         assert request.url.path == "/api/chat"
+        assert payload["model"] == "qwen2.5:7b"
         assert payload["stream"] is False
         assert payload["format"] == ExampleOutput.model_json_schema()
 
@@ -48,6 +49,7 @@ def test_structured_generation():
         )
 
     provider = OllamaProvider(
+        model="qwen2.5:7b",
         transport=httpx.MockTransport(handler),
     )
 
@@ -136,3 +138,29 @@ def test_inference_timeout():
 def test_external_endpoint_rejected():
     with pytest.raises(ValueError, match="approved local"):
         OllamaProvider(base_url="https://example.com")
+
+
+def test_default_model():
+    provider = OllamaProvider()
+
+    assert provider.model == "qwen3:4b-instruct"
+
+
+def test_environment_default_model(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OLLAMA_MODEL", raising=False)
+    monkeypatch.delenv("OLLAMA_BASE_URL", raising=False)
+
+    provider = OllamaProvider.from_environment()
+
+    assert provider.model == "qwen3:4b-instruct"
+
+
+def test_environment_model_override(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("OLLAMA_MODEL", "qwen2.5:7b")
+    monkeypatch.delenv("OLLAMA_BASE_URL", raising=False)
+
+    provider = OllamaProvider.from_environment()
+
+    assert provider.model == "qwen2.5:7b"
