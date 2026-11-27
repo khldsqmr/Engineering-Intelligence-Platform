@@ -407,3 +407,366 @@ def test_ineligible_history_is_excluded(
         )
         == []
     )
+
+
+@pytest.fixture
+def service_dependencies(monkeypatch):
+    from unittest.mock import Mock
+
+    from backend.ai_intelligence import intelligence_service
+    from backend.ai_intelligence.caching import intelligence_cache
+    from backend.ai_intelligence.providers.ollama import (
+        OllamaProvider,
+    )
+
+    generator = Mock(spec=OllamaProvider)
+    generator.model = "test-model"
+
+    evaluator = Mock(spec=OllamaProvider)
+    evaluator.model = "test-evaluator"
+
+    workflow = Mock(side_effect=lambda context, *_: make_approved_result(context))
+
+    monkeypatch.setattr(
+        intelligence_service,
+        "run_intelligence",
+        workflow,
+    )
+
+    monkeypatch.setattr(
+        intelligence_cache,
+        "prepare_model_context",
+        lambda context: {},
+    )
+
+    return generator, evaluator, workflow
+
+
+def test_read_only_retrieval_does_not_generate(database, comparable_context, service_dependencies):
+    from backend.ai_intelligence.intelligence_service import (
+        retrieve_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    result = retrieve_intelligence(
+        comparable_context,
+        database,
+        generator_model=generator.model,
+        evaluator_model=evaluator.model,
+    )
+
+    assert result is None
+    workflow.assert_not_called()
+
+
+def test_service_cache_miss_then_hit(database, comparable_context, service_dependencies):
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+        retrieve_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    first = execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    second = execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    retrieved = retrieve_intelligence(
+        comparable_context,
+        database,
+        generator_model=generator.model,
+        evaluator_model=evaluator.model,
+    )
+
+    assert first.cacheHit is False
+    assert second.cacheHit is True
+    assert retrieved is not None
+    assert retrieved.cacheHit is True
+
+    assert (
+        first.record["intelligenceId"]
+        == second.record["intelligenceId"]
+        == retrieved.record["intelligenceId"]
+    )
+
+    workflow.assert_called_once()
+
+
+def test_force_refresh_bypasses_cache(database, comparable_context, service_dependencies):
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    first = execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    second = execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+        force_refresh=True,
+    )
+
+    assert second.cacheHit is False
+
+    assert first.record["intelligenceId"] != second.record["intelligenceId"]
+
+    assert workflow.call_count == 2
+
+
+def test_new_ingestion_invalidates_cache(database, comparable_context, service_dependencies):
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    refreshed_context = comparable_context.model_copy(
+        update={"ingestionRunId": "new-ingestion-run"}
+    )
+
+    second = execute_intelligence(
+        refreshed_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    assert second.cacheHit is False
+    assert workflow.call_count == 2
+
+
+def test_rejected_intelligence_is_not_cached(
+    database,
+    comparable_context,
+    service_dependencies,
+    failed_result,
+):
+    from dataclasses import replace
+
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    workflow.side_effect = lambda context, *_: replace(
+        failed_result,
+        context=context,
+    )
+
+    for _ in range(2):
+        result = execute_intelligence(
+            comparable_context,
+            database,
+            generator,
+            evaluator,
+        )
+
+        assert result.cacheHit is False
+        assert result.record["approvalStatus"] == "REJECTED"
+
+    assert workflow.call_count == 2
+
+
+def test_changed_metric_value_invalidates_cache(database, comparable_context, service_dependencies):
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    changed_fact = comparable_context.analyticalContext[0].model_copy(
+        update={
+            "currentValue": 16.0,
+            "changeValue": 8.0,
+            "changePct": 100.0,
+        }
+    )
+
+    changed_context = comparable_context.model_copy(update={"analyticalContext": [changed_fact]})
+
+    second = execute_intelligence(
+        changed_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    assert second.cacheHit is False
+    assert workflow.call_count == 2
+
+
+def test_changed_history_invalidates_cache(database, comparable_context, service_dependencies):
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    prior = shift_period(comparable_context, 1)
+
+    save_intelligence(
+        make_approved_result(prior),
+        database,
+        generator_model="test-model",
+    )
+
+    second = execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    assert second.cacheHit is False
+    assert workflow.call_count == 2
+
+
+def test_changed_model_invalidates_cache(database, comparable_context, service_dependencies):
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+        retrieve_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    result = retrieve_intelligence(
+        comparable_context,
+        database,
+        generator_model="different-model",
+        evaluator_model=evaluator.model,
+    )
+
+    assert result is None
+    workflow.assert_called_once()
+
+
+def test_invalid_narrative_is_retried_once(database, comparable_context, service_dependencies):
+    from dataclasses import replace
+
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    approved = make_approved_result(comparable_context)
+
+    rejected = replace(
+        approved,
+        draft=replace(
+            approved.draft,
+            validationErrors=("narrative: unexpected numerical text",),
+        ),
+        evaluation=EvaluationOutcome(
+            approvalStatus="REJECTED",
+            deterministicValidationPassed=False,
+            findings=["narrative: unexpected numerical text"],
+        ),
+    )
+
+    workflow.side_effect = [rejected, approved]
+
+    result = execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    assert result.record["approvalStatus"] == "AUTO_APPROVED"
+    assert workflow.call_count == 2
+
+    with open_database(database) as connection:
+        records = connection.execute("""
+            SELECT approvalStatus
+            FROM eip_tbl_ai_intelligenceHistory_log
+        """).fetchall()
+
+    assert len(records) == 2
+
+    assert {row["approvalStatus"] for row in records} == {
+        "REJECTED",
+        "AUTO_APPROVED",
+    }
+
+
+def test_regeneration_is_bounded(database, comparable_context, service_dependencies):
+    from dataclasses import replace
+
+    from backend.ai_intelligence.intelligence_service import (
+        execute_intelligence,
+    )
+
+    generator, evaluator, workflow = service_dependencies
+
+    candidate = make_approved_result(comparable_context)
+
+    candidate = replace(
+        candidate,
+        evaluation=EvaluationOutcome(
+            approvalStatus="REGENERATE",
+            deterministicValidationPassed=True,
+            evaluationScore=80.0,
+        ),
+    )
+
+    workflow.side_effect = [candidate, candidate]
+
+    result = execute_intelligence(
+        comparable_context,
+        database,
+        generator,
+        evaluator,
+    )
+
+    assert result.record["approvalStatus"] == "REGENERATE"
+    assert result.record["eligibleForHistoricalContext"] == 0
+    assert workflow.call_count == 2
