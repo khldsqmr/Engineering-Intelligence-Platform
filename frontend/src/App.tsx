@@ -23,6 +23,8 @@ import {
 
 import { PerformanceManagementPage } from './features/analytics/performance_management/PerformanceManagementPage'
 
+import { EngineeringLifecyclePage } from './features/analytics/engineering_lifecycle/EngineeringLifecyclePage'
+
 import './App.css'
 
 function App() {
@@ -42,6 +44,8 @@ function App() {
                     ? <ExecutiveOverviewPage />
                     : item.path === '/performance'
                       ? <PerformanceManagementPage />
+                      : item.path === '/lifecycle'
+                        ? <EngineeringLifecyclePage />
                     : (
                       <WorkspacePage
                         category={group.label}

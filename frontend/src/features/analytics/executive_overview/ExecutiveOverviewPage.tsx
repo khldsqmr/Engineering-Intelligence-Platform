@@ -111,7 +111,7 @@ export function ExecutiveOverviewPage() {
             onRetry={daily.retryFailed}
           />
 
-          
+
           <section
             className="analytics-chart-grid"
             aria-label="Executive analytical charts"

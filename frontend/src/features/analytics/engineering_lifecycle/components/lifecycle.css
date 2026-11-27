@@ -1,0 +1,222 @@
+.lifecycle-diagnostics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.lifecycle-category {
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.lifecycle-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  padding: 7px 10px;
+}
+
+.lifecycle-category-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lifecycle-category-header h3 > span {
+  color: var(--color-primary);
+  font-size: 11px;
+}
+
+.lifecycle-table-container {
+  overflow-x: auto;
+}
+
+.lifecycle-table {
+  width: 100%;
+  min-width: 850px;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.lifecycle-table th,
+.lifecycle-table td {
+  padding: 0 10px;
+  text-align: right;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.lifecycle-table thead th {
+  height: 34px;
+  background: var(--brand-sidebar);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.lifecycle-table th:first-child {
+  text-align: left;
+}
+
+.lifecycle-table tbody tr {
+  height: 38px;
+}
+
+.lifecycle-table tbody th {
+  background: var(--brand-primary);
+  color: #ffffff;
+  border-bottom-color: rgb(255 255 255 / 12%);
+}
+
+.lifecycle-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.lifecycle-metric-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 37px;
+  gap: 6px;
+}
+
+.lifecycle-metric-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.lifecycle-metric-label strong {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lifecycle-metric-label small {
+  color: rgb(255 255 255 / 75%);
+  font-size: 9px;
+  line-height: 11px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lifecycle-metric-name .metric-info-button {
+  color: rgb(255 255 255 / 80%);
+  flex-shrink: 0;
+}
+
+.lifecycle-metric-name .metric-info-button:hover {
+  color: #ffffff;
+}
+
+.lifecycle-current {
+  font-size: 13px;
+  font-weight: 650;
+  background: var(--color-surface-secondary);
+}
+
+.lifecycle-change {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+.lifecycle-change[data-tone="positive"] {
+  color: var(--color-success);
+}
+
+.lifecycle-change[data-tone="negative"] {
+  color: var(--color-danger);
+}
+
+.lifecycle-coverage {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.lifecycle-table tbody tr:hover td {
+  background: var(--color-surface-secondary);
+}
+
+.lifecycle-note {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+
+/* Standardized analytical table presentation */
+
+.lifecycle-category-header {
+  min-height: 36px;
+  padding: 7px 10px;
+}
+
+.lifecycle-category-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lifecycle-metric-count {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.lifecycle-table thead th {
+  height: 36px;
+  font-size: 13px;
+  font-weight: 600;
+  border-right: 1px solid rgb(255 255 255 / 10%);
+}
+
+.lifecycle-table tbody tr {
+  height: 38px;
+}
+
+.lifecycle-metric-name > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.lifecycle-current,
+.lifecycle-value {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lifecycle-current {
+  font-weight: 700;
+}
+
+.lifecycle-change {
+  font-size: 10px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.lifecycle-sample {
+  font-size: 12px;
+  font-weight: 500;
+}

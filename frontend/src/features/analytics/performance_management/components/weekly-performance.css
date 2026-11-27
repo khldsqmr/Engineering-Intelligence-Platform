@@ -491,3 +491,33 @@
   outline: 1px solid #ffffff;
   outline-offset: 2px;
 }
+
+
+/* Consistent column header separators */
+
+.performance-matrix thead th {
+  border-right: 1px solid rgb(255 255 255 / 10%);
+}
+
+.performance-matrix thead th:last-child {
+  border-right: none;
+}
+
+
+/* Consistent metric row header separators */
+
+.performance-matrix .performance-table tbody .performance-metric-column {
+  border-bottom: 1px solid rgb(255 255 255 / 15%);
+  border-right: 1px solid rgb(255 255 255 / 15%);
+}
+
+.performance-matrix .performance-table tbody tr:last-child .performance-metric-column {
+  border-bottom: none;
+}
+
+
+/* Separate column headers from metric and data rows */
+
+.performance-matrix .performance-table thead th {
+  border-bottom: 1px solid var(--color-border);
+}
