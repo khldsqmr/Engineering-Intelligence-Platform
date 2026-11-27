@@ -3,6 +3,21 @@
 
 Evidence-grounded engineering collaboration analytics and AI intelligence.
 
+## Quick Start
+
+```bash
+git clone https://github.com/khldsqmr/Engineering-Intelligence-Platform.git
+cd Engineering-Intelligence-Platform
+docker compose up -d --build --wait
+```
+
+Open **http://localhost:8080**.
+
+Only Git and Docker are required. No GitHub token or separately
+installed Ollama is needed. Initial startup requires internet access.
+
+See [deployment instructions](#5-quick-start) for requirements and options.
+
 ## 1. Overview
 
 The Engineering Intelligence Platform (EIP) transforms GitHub
@@ -32,7 +47,7 @@ take-home assignment.
 | Intelligence Evaluation | Separate evaluation and narrative confidence scores |
 | Intelligence History | Persisted execution records and auditability |
 | Data Engineering | Bronze, Silver and Gold analytical architecture |
-| Deployment | Containerized backend and frontend |
+| Deployment | Token-free demo, containerized inference and optional live ingestion |
 
 ## 3. Architecture
 
@@ -41,6 +56,9 @@ flowchart TD
     A[GitHub REST API] --> B[Bronze Ingestion]
     B --> C[Silver Transformation]
     C --> D[Gold Analytical Facts]
+    S[Bundled Demo Snapshot] --> T[Demo Bootstrap]
+    T --> D
+    T --> M
 
     D --> E[Deterministic Analytics]
     E --> F[Analytical Context]
@@ -80,173 +98,201 @@ Deterministic analytical requests do not require LLM inference.
 | Testing | Pytest |
 | Code Quality | Ruff, Oxlint |
 
-## 5. Quickstart
+## 5. Quick Start
 
-### 5.1 Prerequisites
+### 5.1 Recommended: Demo Mode
+
+The default deployment provides a ready-to-use evaluation
+environment without GitHub credentials, Python, Node.js
+or a separately installed Ollama.
+
+Prerequisites:
 
 - Git
-- Docker and Docker Compose
-- Ollama installed on the host
-- GitHub personal access token with read-only access
-
-Ollama is hosted locally and is not provisioned by Docker Compose.
-
-### 5.2 Configure the environment
-
-Clone the public repository:
+- Docker with Docker Compose v2.24.4 or later
+- Internet connectivity for initial image and model downloads
+- Recommended: at least 8 GiB of memory allocated to Docker
 
 ```bash
 git clone https://github.com/khldsqmr/Engineering-Intelligence-Platform.git
 cd Engineering-Intelligence-Platform
+docker compose up -d --build --wait
 ```
 
-From the repository root:
+Open **http://localhost:8080**.
+
+The first startup automatically builds the application,
+provisions the local language model, restores the bundled
+historical snapshot and starts the application.
+
+No populated .env file is required.
+
+### 5.2 Demonstration dataset
+
+| Attribute | Value |
+|---|---|
+| Repository | apache/airflow |
+| Historical coverage start | September 28, 2026 |
+| Coverage end (exclusive) | November 27, 2026 |
+| Detailed enrichment start | November 6, 2026 |
+| Gold lifecycle records | 4,999 |
+| Registered metrics | 14 |
+| Materialized period facts | 42 |
+| Historical intelligence records | 5 |
+| Source coverage | ESTIMATED |
+
+The snapshot is derived from public GitHub data.
+Raw Bronze payloads and Silver records are excluded.
+Contributor identifiers are consistently pseudonymized.
+
+Public PR identifiers remain available for traceability,
+so the dataset should not be considered fully anonymized.
+
+See [demo/manifest.json](demo/manifest.json) for provenance,
+coverage, record counts and the snapshot checksum.
+
+Demo Mode uses fixed historical data rather than retrieving
+new GitHub observations. Fresh AI intelligence can still
+be generated locally.
+
+### 5.3 Suggested evaluation sequence
+
+1. Executive Overview: deterministic engineering metrics.
+2. Engineering Lifecycle: collaboration performance.
+3. AI Insights: narratives, hypotheses and evidence.
+4. Context Explorer: analytical reasoning context.
+5. Intelligence History: persisted execution and evaluation.
+6. Engineering Copilot: conversational analytical exploration.
+7. Data Quality: source coverage and governance.
+
+Cached narratives are immediately available without inference.
+
+Fresh generation may take several minutes on CPU-only hardware.
+An observed containerized generation and evaluation request
+completed in approximately 176 seconds on the development machine.
+
+### 5.4 Application endpoints
+
+| Service | URL |
+|---|---|
+| EIP application | http://localhost:8080 |
+| Backend API | http://localhost:8001 |
+| FastAPI documentation | http://localhost:8001/docs |
+| OpenAPI specification | http://localhost:8001/openapi.json |
+
+```bash
+curl http://localhost:8001/health
+curl http://localhost:8001/api/v1/insights
+curl http://localhost:8001/api/v1/ai/narrative
+```
+
+### 5.5 Optional: Live Mode
+
+Live Mode supports authenticated ingestion from public GitHub
+repositories using the Bronze, Silver and Gold pipelines.
+
+Create the environment configuration:
 
 ```bash
 cp .env.example .env
-mkdir -p data
 ```
 
-Create a read-only GitHub token:
+Create a read-only fine-grained token at:
 
-1. Open [GitHub fine-grained token settings](https://github.com/settings/personal-access-tokens/new).
-2. Enter a descriptive token name and expiration date.
-3. Select your GitHub account as the resource owner.
-4. Select public repository access.
-5. Leave additional permissions unselected.
-6. Generate the token and copy it into the local `.env` file.
+https://github.com/settings/personal-access-tokens/new
 
-Public repository ingestion does not require repository write
+Select public repository access without additional write
 permissions or private repository access.
 
-The reviewer should use their own token. No application
-credentials are distributed with the repository.
-
-Update `.env` with the generated token:
+Configure the token and repository in .env:
 
 ```dotenv
 GITHUB_TOKEN=your_read_only_token
 GITHUB_REPOSITORY=apache/airflow
-DATABASE_PATH=data/eip.db
-OLLAMA_BASE_URL=http://127.0.0.1:11434
 OLLAMA_MODEL=qwen3:4b-instruct
-APP_ENV=development
-LOG_LEVEL=INFO
 ```
 
-Never commit the populated `.env` file.
+Never commit the populated .env file.
 
-### 5.3 Prepare the local language model
+Start the isolated deployment:
 
-Start Ollama on the host and download the configured model:
+```bash
+docker compose -p eip-live -f compose.yaml -f compose.live.yaml up -d --build --wait
+```
+
+Execute the pipelines in dependency order:
+
+```bash
+docker compose -p eip-live -f compose.yaml -f compose.live.yaml exec backend python -m backend.pipelines.github_ingestion
+
+docker compose -p eip-live -f compose.yaml -f compose.live.yaml exec backend python -m backend.data_engineering.transformations.silver.github_silver
+
+docker compose -p eip-live -f compose.yaml -f compose.live.yaml exec backend python -m backend.data_engineering.transformations.gold.github_gold
+```
+
+Optionally generate historical intelligence:
+
+```bash
+docker compose -p eip-live -f compose.yaml -f compose.live.yaml exec backend python -m backend.pipelines.intelligence_bootstrap --periods 3
+```
+
+Live application: http://localhost:8082
+
+Live backend: http://localhost:8003
+
+Live Mode uses a separate persistent database volume.
+Historical extraction remains bounded by pipeline configuration,
+repository activity and GitHub API quota.
+
+### 5.6 Optional: Native Ollama acceleration
+
+Docker Desktop users with a compatible host Ollama installation
+may use native inference and hardware acceleration where supported.
+
+Ensure host Ollama is running:
 
 ```bash
 ollama pull qwen3:4b-instruct
 ```
 
-Verify that Ollama is available:
-
-```bash
-curl http://127.0.0.1:11434/api/tags
-```
-
-Docker Compose overrides the backend Ollama URL to access
-the host inference service through host.docker.internal.
-
-### 5.4 Start the application
-
-```bash
-docker compose up -d --build --wait
-```
-
-Verify application health:
-
-```bash
-curl http://127.0.0.1:8001/health
-```
-
-### 5.5 Populate the analytical database
-
-Execute the data engineering pipeline in dependency order.
-
-Bronze ingestion:
-
-```bash
-docker compose exec backend \
-  python -m backend.pipelines.github_ingestion
-```
-
-Silver transformation:
-
-```bash
-docker compose exec backend \
-  python -m backend.data_engineering.transformations.silver.github_silver
-```
-
-Gold transformation:
-
-```bash
-docker compose exec backend \
-  python -m backend.data_engineering.transformations.gold.github_gold
-```
-
-Bronze ingestion initializes the database automatically.
-
-Historical extraction is bounded by pipeline configuration,
-repository activity and GitHub API quota.
-
-The SQLite database is persisted in the local data directory
-and remains available across container restarts.
-
-### 5.6 Bootstrap historical AI intelligence (optional)
-
-The data pipelines populate historical analytical facts.
-AI intelligence history is initially empty in a fresh installation.
-
-To generate intelligence for recent supported reporting periods:
-
-```bash
-docker compose exec backend python -m backend.pipelines.intelligence_bootstrap --periods 3
-```
-
-The utility discovers supported reporting periods dynamically
-and processes them chronologically, from oldest to newest.
-
-Only periods within the available enrichment window are selected.
-The number of processed periods may be smaller than requested.
-
-Existing compatible intelligence is reused from the cache.
-New candidates pass through the standard numerical grounding,
-evidence validation and evaluation policies.
-
-Approved intelligence may contribute to subsequent historical
-reasoning. Rejected candidates remain available for auditing.
-
-This step requires local model inference and is optional.
-Generation time and approval outcomes depend on model behavior
-and available evidence.
-
-Existing cached narratives are not automatically regenerated
-when additional historical intelligence becomes available.
-Use the narrative generation endpoint with forceRefresh set
-to true when refreshed historical context is required.
-
-### 5.7 Access the application
-
-| Service | URL |
-|---|---|
-| EIP Application | http://127.0.0.1:8080 |
-| Backend API | http://127.0.0.1:8001 |
-| API Documentation | http://127.0.0.1:8001/docs |
-| OpenAPI Specification | http://127.0.0.1:8001/openapi.json |
-
-### 5.8 Stop the application
+Stop the default deployment before switching inference modes:
 
 ```bash
 docker compose down
 ```
 
-Local analytical data remains persisted in the data directory.
+Start Demo Mode with native inference:
+
+```bash
+docker compose -f compose.yaml -f compose.native-ollama.yaml up -d --build --wait
+```
+
+The backend accesses Ollama through host.docker.internal.
+
+This optional configuration requires Docker Desktop and
+a reachable host inference service.
+
+### 5.7 Persistence and shutdown
+
+Stop the default deployment:
+
+```bash
+docker compose down
+```
+
+Stop Live Mode:
+
+```bash
+docker compose -p eip-live -f compose.yaml -f compose.live.yaml down
+```
+
+Named volumes preserve databases, intelligence history
+and downloaded models across restarts.
+
+The demo initializer preserves an existing valid database.
+
+Avoid using docker compose down -v unless intentionally
+deleting persisted data and model volumes.
 
 ## 6. API Reference
 
@@ -331,7 +377,10 @@ Engineering-Intelligence-Platform/
 ├── deployment/
 ├── docs/
 ├── exploration/
+├── demo/
 ├── compose.yaml
+├── compose.live.yaml
+├── compose.native-ollama.yaml
 ├── pyproject.toml
 ├── .env.example
 ├── README.md

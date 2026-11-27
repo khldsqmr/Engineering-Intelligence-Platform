@@ -8,6 +8,7 @@ WORKDIR /app
 
 COPY pyproject.toml README.md ./
 COPY backend ./backend
+COPY demo ./demo
 
 RUN pip install --no-cache-dir .
 

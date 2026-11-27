@@ -10,6 +10,8 @@ Rather than putting all endpoints inside main.py, we are keeping the application
 
 """
 
+import os
+
 from fastapi import APIRouter, Request
 
 from backend.api.schemas.health import HealthResponse
@@ -25,4 +27,5 @@ def get_health(request: Request) -> HealthResponse:
         service=request.app.title,
         status="healthy",
         version=request.app.version,
+        mode="demo" if os.getenv("APP_ENV") == "demo" else "live",
     )

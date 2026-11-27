@@ -20,6 +20,7 @@ All metrics are calculated independently of the LLM.
 # ---------------------------------------------------------------------
 
 import json
+import os
 from collections import defaultdict
 from datetime import date, timedelta
 from math import ceil, floor
@@ -718,7 +719,7 @@ def refresh_gold(database_path: str, repository: str) -> dict:
 # ---------------------------------------------------------------------
 
 if __name__ == "__main__":
-    environment = dotenv_values(".env")
+    environment = {**dotenv_values(".env"), **os.environ}
 
     database_path = environment.get("DATABASE_PATH") or "data/eip.db"
 

@@ -3,7 +3,7 @@
 
 ## Engineering Notes and Design Decisions
 
-Version: 0.1.0
+Version: 0.1.1
 
 Assignment: Loop Senior AI/ML Engineer Take-Home
 
@@ -28,23 +28,27 @@ history and containerized deployment.
 
 ## 2. Setup and Execution
 
-The recommended execution path is Docker Compose with
-host-based Ollama inference.
+The recommended reviewer execution path is a token-free
+Docker Compose demonstration environment.
 
-The README provides configuration, application startup,
-data pipeline execution, API examples and testing instructions.
+The default deployment automatically provisions local Ollama
+inference and restores a bundled historical GitHub snapshot.
 
-The local database is populated through three independently
-executable stages:
+Optional Live Mode supports authenticated ingestion through
+three independently executable stages:
 
 1. GitHub Bronze ingestion.
 2. Silver standardization.
 3. Gold analytical transformations.
 
-A read-only GitHub token is required for source ingestion.
+A read-only GitHub token is required only for source ingestion.
 
-The database and intelligence history persist locally across
-application restarts.
+Demo and Live Mode use isolated persistent database volumes.
+An optional Docker Desktop configuration supports native
+Ollama inference.
+
+The README provides deployment instructions, configuration
+options, API examples and testing commands.
 
 ## 3. Architectural Decisions
 
@@ -398,7 +402,7 @@ The automated backend test suite covers areas including:
 
 At the latest validated development checkpoint:
 
-- 328 automated backend tests passed.
+- 336 automated backend tests passed.
 - Ruff lint checks passed.
 - Frontend lint returned zero errors and warnings.
 - TypeScript and production frontend build succeeded.
@@ -473,9 +477,8 @@ invalidation observability.
 
 ### Priority 3: Reproducibility and acceptance testing
 
-Add automated fresh-install validation, a small
-sanitized demonstration dataset and end-to-end
-application tests.
+Expand automated fresh-install validation and end-to-end
+application testing around the bundled demonstration dataset.
 
 Introduce fully locked backend dependencies and
 document model resource requirements.
@@ -663,3 +666,174 @@ is available as a separate optional utility.
 
 Recurring scheduling and distributed workflow orchestration
 are outside the current local evaluation scope.
+
+## Reviewer Experience and Deployment Automation
+
+The default deployment removes mandatory GitHub credentials
+and separately installed language model infrastructure.
+
+### Architecture
+
+- Containerized Ollama provides local inference.
+- An initialization service provisions the configured model.
+- A separate initializer restores the historical snapshot.
+- The backend starts after both initialization services succeed.
+- Nginx provides dynamic Docker DNS resolution.
+- Named volumes preserve analytical state and model files.
+- The application header identifies Demo Mode.
+
+### Snapshot provenance and integrity
+
+The bundled snapshot was derived from independently ingested
+public Apache Airflow GitHub observations.
+
+It contains one ingestion execution record, 4,999 Gold
+lifecycle records, 42 period metric records and five
+historical intelligence executions.
+
+Raw Bronze payloads and Silver records are excluded.
+Contributor identifiers are consistently pseudonymized.
+Retained public PR identifiers prevent guarantees of
+complete anonymization.
+
+The initializer validates snapshot version, checksum,
+table structure, record counts and SQLite integrity.
+Initialization is transactional and does not overwrite
+an existing database.
+
+### Validation results
+
+| Validation | Result |
+|---|---|
+| Analytical equivalence after pseudonymization | Six reporting requests passed |
+| Historical intelligence cache compatibility | Three periods passed |
+| Idempotent database initialization | Passed |
+| Token-free backend deployment | Passed |
+| Frontend connectivity after backend recreation | Passed |
+| Fresh containerized AI inference | Passed |
+| Persistent intelligence cache reuse | Passed |
+| Native Ollama connectivity from Docker | Passed |
+| Live Mode environment configuration | Passed |
+| Backend automated tests | 336 passed |
+
+Containerized CPU inference using qwen3:4b-instruct
+completed a full generation and evaluation request
+in 176.37 seconds.
+
+Observed Ollama memory utilization was approximately
+4.52 GiB during inference.
+
+The generated narrative received an evaluation score
+of 100 and hypothesis confidence of 60.
+
+Manual inspection nevertheless identified an incomplete,
+mixed-language hypothesis and an insufficiently supported
+explanation. Automated approval is not independent proof
+of analytical correctness.
+
+### Deployment trade-offs
+
+The historical snapshot enables immediate evaluation
+but does not represent continuously refreshed source data.
+
+Cached narratives reduce inference latency. Fresh generation
+remains dependent on available compute resources.
+
+Historical model outputs are preserved without rewriting
+their original evaluation records.
+
+The Ollama image is pinned by digest. Model tags and
+other dependencies are not fully content-addressed.
+
+## Multi-Source Extensibility
+
+GitHub was deliberately selected as the initial source to
+demonstrate a complete engineering intelligence workflow.
+
+The current implementation remains GitHub-specific at
+several ingestion and transformation boundaries. It is
+not yet a fully source-agnostic integration platform.
+
+### Equivalent source systems
+
+A future GitLab or Bitbucket integration would introduce:
+
+1. Source-specific authentication and ingestion adapters.
+2. Source-specific Bronze observations and lineage.
+3. A canonical Silver engineering entity model.
+4. Source-aware Gold lifecycle and period metrics.
+5. Source and repository filters in the API and frontend.
+
+GitHub pull requests and GitLab merge requests would map
+to a canonical change-request entity.
+
+Identifiers would incorporate source and repository
+identity to avoid collisions.
+
+Metric definitions would require semantic compatibility
+checks. Review events and approval events should not
+automatically be considered equivalent.
+
+Combined metrics would be recomputed from eligible
+underlying observations rather than averaging
+repository-level medians or percentages.
+
+### Complementary source systems
+
+Jira, CI/CD platforms and incident management systems
+would extend the canonical analytical model with
+complementary engineering entities.
+
+Cross-source relationships could connect work items,
+change requests, builds, deployments and incidents.
+
+This would enable broader engineering delivery analytics,
+subject to reliable identity resolution and data coverage.
+
+### Impact on AI Intelligence
+
+The AI layer would continue consuming governed analytical
+context rather than unrestricted raw source observations.
+
+Source identity, metric applicability, coverage boundaries
+and cross-source relationships would become explicit
+components of the analytical context.
+
+Evidence references and cache compatibility keys would
+incorporate the applicable source and repository scope.
+
+The objective is to reuse the reasoning, validation,
+evaluation and presentation architecture while extending
+the underlying integration and semantic models.
+
+## v0.1.1 Token-Free Fresh-Clone Acceptance
+
+An independent clone of release candidate e5198bc was
+deployed on November 27, 2026, using a new Docker Compose
+project and newly created database and model volumes.
+
+No populated environment file, GitHub credentials,
+pre-existing analytical database or host Ollama service
+was required by the deployment.
+
+| Validation | Observed result |
+|---|---|
+| Startup duration | 39.727 seconds |
+| Automatic model download | 2.5 GB |
+| Database restoration | Passed |
+| Gold lifecycle records | 4,999 |
+| Gold period facts | 42 |
+| Historical intelligence records | 5 |
+| Deterministic analytics | 14 metrics |
+| Historical narrative retrieval | Passed |
+| Frontend HTTP accessibility | Passed |
+| Credential isolation | Passed |
+| Deployment mode | demo |
+| Application version | 0.1.1 |
+
+Existing Docker image build caches were available.
+Startup duration is hardware, network and cache dependent.
+
+The acceptance environment used independent analytical
+and model volumes. Existing development databases and
+model volumes were preserved.

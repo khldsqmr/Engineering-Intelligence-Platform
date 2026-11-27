@@ -16,3 +16,4 @@ class HealthResponse(BaseModel):
     service: str
     status: Literal["healthy"]
     version: str
+    mode: Literal["demo", "live"]

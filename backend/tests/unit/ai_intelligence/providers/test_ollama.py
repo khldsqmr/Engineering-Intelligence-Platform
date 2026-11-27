@@ -164,3 +164,11 @@ def test_environment_model_override(monkeypatch, tmp_path):
     provider = OllamaProvider.from_environment()
 
     assert provider.model == "qwen2.5:7b"
+
+
+def test_internal_docker_endpoint_allowed():
+    provider = OllamaProvider(
+        base_url="http://ollama:11434",
+    )
+
+    assert provider.base_url == "http://ollama:11434"

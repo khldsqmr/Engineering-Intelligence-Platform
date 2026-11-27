@@ -1,0 +1,25 @@
+{
+  "snapshotVersion": "1.0.0",
+  "repository": "apache/airflow",
+  "sourceType": "historical-public-github-snapshot",
+  "coverageStartAt": "2026-09-28T00:00:00+00:00",
+  "coverageEndAt": "2026-11-27T00:00:00+00:00",
+  "enrichmentStartAt": "2026-11-06T00:00:00+00:00",
+  "sourceCoverage": "ESTIMATED",
+  "dataRefreshedAt": "2026-11-27T11:40:44Z",
+  "snapshotFile": "snapshot.json.gz",
+  "sha256": "91be9b52e52da278214e9031b1795f1775b3088c973cdc6f0237c5733c2cd3d6",
+  "compressedBytes": 219477,
+  "tableRowCounts": {
+    "eip_tbl_control_ingestionRunHistory_log": 1,
+    "eip_tbl_gold_prLifecycle_wide": 4999,
+    "eip_tbl_gold_periodFacts_long": 42,
+    "eip_tbl_ai_intelligenceHistory_log": 5
+  },
+  "sanitization": {
+    "contributorIdentifiers": "Consistent surrogate identifiers",
+    "rawBronzePayloadsIncluded": false,
+    "silverRecordsIncluded": false,
+    "historicalIntelligenceModified": false
+  }
+}

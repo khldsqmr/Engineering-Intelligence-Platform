@@ -21,6 +21,7 @@ separately in the Silver and Gold layers.
 
 import asyncio
 import json
+import os
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
@@ -198,7 +199,7 @@ async def run_ingestion(
 
     # 05.01. Load environment and database configuration.
 
-    environment = dotenv_values(".env")
+    environment = {**dotenv_values(".env"), **os.environ}
 
     token = environment.get("GITHUB_TOKEN")
     repository = environment.get("GITHUB_REPOSITORY")
