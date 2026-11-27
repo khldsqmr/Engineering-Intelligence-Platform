@@ -5,9 +5,21 @@ import {
   Routes,
 } from 'react-router-dom'
 
-import { AppShell } from './components/layout/AppShell'
-import { navigationGroups } from './components/layout/navigation'
-import { WorkspacePage } from './pages/WorkspacePage'
+import {
+  AppShell,
+} from './components/layout/AppShell'
+
+import {
+  navigationGroups,
+} from './components/layout/navigation'
+
+import {
+  WorkspacePage,
+} from './pages/WorkspacePage'
+
+import {
+  ExecutiveOverviewPage,
+} from './features/analytics/executive_overview/ExecutiveOverviewPage'
 
 import './App.css'
 
@@ -24,11 +36,15 @@ function App() {
                 key={item.path}
                 path={item.path}
                 element={
-                  <WorkspacePage
-                    category={group.label}
-                    title={item.label}
-                    description={item.description}
-                  />
+                  item.path === '/'
+                    ? <ExecutiveOverviewPage />
+                    : (
+                      <WorkspacePage
+                        category={group.label}
+                        title={item.label}
+                        description={item.description}
+                      />
+                    )
                 }
               />
             )),
