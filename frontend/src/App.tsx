@@ -1,50 +1,48 @@
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+} from 'react-router-dom'
 
-import { useEffect, useState } from 'react'
-import { getHealth } from './services/healthService'
-import type { HealthResponse } from './types/health'
+import { AppShell } from './components/AppShell'
+import { navigationGroups } from './components/navigation'
+import { WorkspacePage } from './pages/WorkspacePage'
+
 import './App.css'
 
 function App() {
-  const [health, setHealth] = useState<HealthResponse | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    getHealth(controller.signal)
-      .then(setHealth)
-      .catch((err: unknown) => {
-        if (!controller.signal.aborted) {
-          setError(
-            err instanceof Error ? err.message : 'Unknown error',
-          )
-        }
-      })
-
-    return () => controller.abort()
-  }, [])
-
   return (
-    <main>
-      <h1>CodePulse</h1>
-      <p>AI-powered Engineering Intelligence Platform</p>
+    <BrowserRouter>
+      <Routes>
 
-      <section>
-        <h2>System Status</h2>
+        <Route element={<AppShell />}>
 
-        {error ? (
-          <p>Backend unavailable: {error}</p>
-        ) : health ? (
-          <>
-            <p>Service: {health.service}</p>
-            <p>Status: {health.status}</p>
-            <p>Version: {health.version}</p>
-          </>
-        ) : (
-          <p>Connecting to backend...</p>
-        )}
-      </section>
-    </main>
+          {navigationGroups.flatMap(group =>
+            group.items.map(item => (
+              <Route
+                key={item.path}
+                path={item.path}
+                element={
+                  <WorkspacePage
+                    category={group.label}
+                    title={item.label}
+                    description={item.description}
+                  />
+                }
+              />
+            )),
+          )}
+
+          <Route
+            path="*"
+            element={<Navigate to="/" replace />}
+          />
+
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
   )
 }
 
