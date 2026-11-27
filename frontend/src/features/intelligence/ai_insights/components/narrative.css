@@ -1,0 +1,435 @@
+.intelligence-workspace-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.intelligence-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.intelligence-card-header,
+.intelligence-heading,
+.intelligence-toolbar,
+.intelligence-status,
+.intelligence-score-label,
+.intelligence-evidence-header,
+.intelligence-evidence-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.intelligence-card-header,
+.intelligence-toolbar,
+.intelligence-evidence-header,
+.intelligence-evidence-value {
+  justify-content: space-between;
+}
+
+.intelligence-card-header {
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.intelligence-heading > svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.intelligence-card-header h2 {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.intelligence-card-header p,
+.intelligence-score p,
+.intelligence-evidence-card p {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.intelligence-toolbar {
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-secondary);
+}
+
+.intelligence-status {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-status svg {
+  color: var(--color-success);
+}
+
+.intelligence-generate-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--brand-sidebar);
+  color: #ffffff;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.intelligence-generate-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.intelligence-score-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.intelligence-score {
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-secondary);
+}
+
+.intelligence-score-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-score > strong {
+  display: block;
+  margin: 6px 0;
+  font-size: 28px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.intelligence-score > strong small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-analysis-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+.intelligence-analysis-section h3 {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.intelligence-analysis-section h4 {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.intelligence-analysis-section p,
+.intelligence-analysis-section li {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.intelligence-analysis-section ul {
+  padding-left: 18px;
+}
+
+.intelligence-qualification {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-references {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.intelligence-reference {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-secondary);
+  color: var(--color-primary);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.intelligence-reference:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.intelligence-evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.intelligence-evidence-card {
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.intelligence-evidence-header > span {
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.intelligence-evidence-card h3 {
+  margin: 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.intelligence-evidence-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.intelligence-evidence-value strong {
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.intelligence-evidence-value span {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-evidence-value [data-tone="positive"] {
+  color: var(--color-success);
+}
+
+.intelligence-evidence-value [data-tone="negative"] {
+  color: var(--color-danger);
+}
+
+.intelligence-notice {
+  padding: 12px;
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.intelligence-notice button {
+  margin-left: 8px;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.intelligence-spinner {
+  animation: intelligence-spin 1s linear infinite;
+}
+
+@keyframes intelligence-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intelligence-spinner {
+    animation: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .intelligence-score-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intelligence-evidence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Explainable intelligence assessment */
+
+.intelligence-assessment {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+.intelligence-assessment h3 {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.intelligence-assessment-description {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-methodology {
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.intelligence-methodology summary {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.intelligence-methodology h4 {
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.intelligence-methodology p {
+  margin: 8px 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-methodology dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 20px;
+  margin: 12px 0;
+  font-size: 12px;
+}
+
+.intelligence-methodology dt,
+.intelligence-methodology dd {
+  padding: 7px 0;
+  margin: 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.intelligence-methodology dd {
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* Independent intelligence sections */
+
+.intelligence-card.intelligence-analysis-section {
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  gap: 10px;
+}
+
+.intelligence-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.intelligence-section-title h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.intelligence-section-title h3 > span {
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.intelligence-section-title h3 > span:empty {
+  display: none;
+}
+
+.intelligence-analysis-section .intelligence-section-question,
+.intelligence-section-question {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.intelligence-type-label,
+.intelligence-assessment-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface-secondary);
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.intelligence-ai-purpose {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding-top: 10px;
+  margin-top: 4px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.intelligence-ai-purpose svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.intelligence-ai-purpose strong {
+  font-weight: 600;
+}
+
+.intelligence-card > .intelligence-assessment {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.intelligence-score-label {
+  flex-wrap: wrap;
+}
+
+.intelligence-assessment-label {
+  margin-left: auto;
+  font-size: 9px;
+}
