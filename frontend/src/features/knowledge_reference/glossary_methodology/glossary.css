@@ -1,0 +1,256 @@
+.glossary-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.glossary-selectors {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  max-width: 850px;
+}
+
+.glossary-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.glossary-field label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.glossary-field .eip-select-trigger {
+  width: 100%;
+}
+
+.glossary-reference-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.glossary-category {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--color-primary);
+}
+
+.glossary-reference-header h2 {
+  margin-top: 6px;
+  font-size: 21px;
+  font-weight: 650;
+}
+
+.glossary-reference-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.glossary-reference-section h3 {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--color-primary);
+}
+
+.glossary-reference-section p {
+  max-width: 1050px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+.glossary-calculation {
+  align-self: flex-start;
+  padding: 12px 20px;
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--brand-primary);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.glossary-example-caption {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 700px) {
+  .glossary-selectors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+/* Dependent glossary selectors */
+
+.glossary-selectors {
+  grid-template-columns:
+    minmax(0, 1fr) 32px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.glossary-field label {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.glossary-dependency {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  margin-top: 22px;
+  color: var(--color-primary);
+}
+
+.glossary-field-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .glossary-selectors {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .glossary-dependency {
+    margin-top: 0;
+    height: 20px;
+    transform: rotate(90deg);
+  }
+}
+
+
+/* Semantic category colors */
+
+.glossary-panel {
+  --glossary-accent: var(--color-primary);
+}
+
+.glossary-panel[data-category="engineering"] {
+  --glossary-accent: #37669a;
+}
+
+.glossary-panel[data-category="analytics"] {
+  --glossary-accent: #287c69;
+}
+
+.glossary-panel[data-category="architecture"] {
+  --glossary-accent: #a17a36;
+}
+
+.glossary-panel[data-category="intelligence"] {
+  --glossary-accent: #79569c;
+}
+
+.glossary-panel[data-category="governance"] {
+  --glossary-accent: #a34b63;
+}
+
+.glossary-panel[data-category="information"] {
+  --glossary-accent: #64748b;
+}
+
+/* Night-mode contrast */
+
+[data-mode="night"] .glossary-panel[data-category="engineering"] {
+  --glossary-accent: #93b9e8;
+}
+
+[data-mode="night"] .glossary-panel[data-category="analytics"] {
+  --glossary-accent: #82cbb6;
+}
+
+[data-mode="night"] .glossary-panel[data-category="architecture"] {
+  --glossary-accent: #dfbd7c;
+}
+
+[data-mode="night"] .glossary-panel[data-category="intelligence"] {
+  --glossary-accent: #c4a6e5;
+}
+
+[data-mode="night"] .glossary-panel[data-category="governance"] {
+  --glossary-accent: #e4a0b4;
+}
+
+[data-mode="night"] .glossary-panel[data-category="information"] {
+  --glossary-accent: #b3c2d5;
+}
+
+/* Visual relationship between category and item */
+
+.glossary-field label,
+.glossary-dependency,
+.glossary-category,
+.glossary-reference-section h3 {
+  color: var(--glossary-accent);
+}
+
+.glossary-field:first-child .eip-select-trigger {
+  background: color-mix(
+    in srgb,
+    var(--glossary-accent) 7%,
+    var(--color-surface)
+  );
+
+  border-color: color-mix(
+    in srgb,
+    var(--glossary-accent) 45%,
+    var(--color-border)
+  );
+
+  font-weight: 600;
+}
+
+.glossary-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  background: color-mix(
+    in srgb,
+    var(--glossary-accent) 8%,
+    var(--color-surface)
+  );
+}
+
+.glossary-category::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--glossary-accent);
+}
+
+.glossary-calculation {
+  border-left-color: var(--glossary-accent);
+}

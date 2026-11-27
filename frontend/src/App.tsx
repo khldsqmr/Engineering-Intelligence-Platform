@@ -31,6 +31,12 @@ import { ContextExplorerPage } from './features/intelligence/context_explorer/Co
 
 import { IntelligenceHistoryPage } from './features/intelligence/intelligence_history/IntelligenceHistoryPage'
 
+import { DataQualityPage } from './features/governance/data_quality/DataQualityPage'
+
+import { MetricCatalogPage } from './features/knowledge_reference/metric_catalog/MetricCatalogPage'
+
+import { GlossaryMethodologyPage } from './features/knowledge_reference/glossary_methodology/GlossaryMethodologyPage'
+
 import './App.css'
 
 function App() {
@@ -58,6 +64,12 @@ function App() {
                             ? <ContextExplorerPage />
                             : item.path === '/history'
                               ? <IntelligenceHistoryPage />
+                                : item.path === '/data-quality'
+                                  ? <DataQualityPage />
+                                  : item.path === '/metrics'
+                                    ? <MetricCatalogPage />
+                                    : item.path === '/glossary'
+                                      ? <GlossaryMethodologyPage />
                     : (
                       <WorkspacePage
                         category={group.label}

@@ -61,7 +61,7 @@ WITH metricRegistry (
     requiresDetailEnrichment,       -- PR detail extraction requirement
     requiresReviewEnrichment,       -- Complete review extraction requirement
     performanceDirection,           -- Preferred interpretation of movement
-    supportsHistoricalBenchmark,    -- MVP four-period benchmark eligibility
+    supportsHistoricalBenchmark,    -- Historical benchmark eligibility
     interpretationGuidance,         -- Context and analytical limitations
     displaySequence,                -- Recommended presentation order
     isActive                        -- Metric activation indicator
@@ -212,7 +212,7 @@ WITH metricRegistry (
         0,
         1,
         'LOWER_IS_BETTER',
-        0,
+        1,
         'Measures creation-to-review elapsed time, not review-ready waiting time',
         7,
         1
@@ -232,7 +232,7 @@ WITH metricRegistry (
         0,
         1,
         'LOWER_IS_BETTER',
-        0,
+        1,
         'Includes author preparation, draft time and reviewer waiting time',
         8,
         1
@@ -252,7 +252,7 @@ WITH metricRegistry (
         0,
         1,
         'LOWER_IS_BETTER',
-        0,
+        1,
         'Includes revisions, additional reviews, approvals and merge waiting',
         9,
         1
@@ -272,7 +272,7 @@ WITH metricRegistry (
         0,
         1,
         'CONTEXT_DEPENDENT',
-        0,
+        1,
         'Uses the same reviewed merged cohort in numerator and denominator',
         10,
         1
@@ -292,7 +292,7 @@ WITH metricRegistry (
         0,
         1,
         'CONTEXT_DEPENDENT',
-        0,
+        1,
         'Publish full-cohort ratio only when review extraction is complete',
         11,
         1
@@ -312,7 +312,7 @@ WITH metricRegistry (
         0,
         1,
         'CONTEXT_DEPENDENT',
-        0,
+        1,
         'Counts distinct accounts, not review events or individual workload',
         12,
         1
@@ -336,7 +336,7 @@ WITH metricRegistry (
         1,
         0,
         'CONTEXT_DEPENDENT',
-        0,
+        1,
         'Change size is a proxy for scope, not a direct complexity measure',
         13,
         1
@@ -356,7 +356,7 @@ WITH metricRegistry (
         1,
         0,
         'CONTEXT_DEPENDENT',
-        0,
+        1,
         'Measures change breadth, not engineering effort or code quality',
         14,
         1

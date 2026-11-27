@@ -72,7 +72,7 @@ WITH pipelineConfig (
     (
         'enrichmentHistoryDays',
         'INGESTION',
-        '14',
+        '21',
         'INTEGER',
         'DAYS',
         'Historical lookback for detailed merged PR enrichment',
@@ -126,7 +126,7 @@ WITH pipelineConfig (
     (
         'maxApiRequestsPerRun',
         'API',
-        '1200',
+        '3000',
         'INTEGER',
         'REQUESTS',
         'Maximum API requests permitted per ingestion execution',
@@ -184,7 +184,7 @@ WITH pipelineConfig (
     (
         'benchmarkPeriodCount',
         'ANALYTICS',
-        '4',
+        '2',
         'INTEGER',
         'PERIODS',
         'Number of preceding periods in historical benchmarks',

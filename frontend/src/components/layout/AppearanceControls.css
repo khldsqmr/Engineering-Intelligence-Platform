@@ -23,7 +23,7 @@
   background: var(--color-surface-secondary);
 }
 
-.appearance-control:focus-within {
+.appearance-control:has(:focus-visible) {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
