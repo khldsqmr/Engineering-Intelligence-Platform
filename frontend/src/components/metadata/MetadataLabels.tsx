@@ -1,3 +1,5 @@
+import { Database, Sparkles } from 'lucide-react'
+
 export type InformationType =
   | 'Fact'
   | 'AI Generated'
@@ -28,6 +30,9 @@ export function MetadataLabels({
         className="metadata-source"
         title={`Data source: ${source}`}
       >
+        {informationType === 'AI Generated'
+          ? <Sparkles size={10} aria-hidden="true" />
+          : <Database size={10} aria-hidden="true" />}
         {source}
       </span>
 

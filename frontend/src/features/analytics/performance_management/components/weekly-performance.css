@@ -1,0 +1,493 @@
+/* Shared performance dimensions */
+
+.performance-matrix {
+  --performance-row-height: 38px;
+  --performance-header-height: 36px;
+  --performance-label-size: 245px;
+  --performance-wtd-size: 96px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+
+/* Global reporting toolbar */
+
+.performance-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.performance-toolbar-heading h2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.performance-toolbar-heading > span,
+.performance-toolbar-controls {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.performance-toolbar-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.performance-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.performance-toggle input {
+  accent-color: var(--color-primary);
+}
+
+
+/* One shared horizontal scroll area */
+
+.performance-tables-scroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.performance-tables {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 920px;
+}
+
+
+/* Independent category containers */
+
+.performance-category {
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.performance-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.performance-category-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.performance-category-title h3 {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.performance-category-sequence {
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.performance-category-count {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+
+/* Identical column widths for every table */
+
+.performance-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+}
+
+.performance-label-width {
+  width: var(--performance-label-size);
+}
+
+.performance-wtd-width {
+  width: var(--performance-wtd-size);
+}
+
+.performance-table th,
+.performance-table td {
+  box-sizing: border-box;
+  padding: 0 8px;
+  text-align: right;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-border);
+}
+
+
+/* Repeated date headers */
+
+.performance-table thead th {
+  height: var(--performance-header-height);
+  background: var(--color-surface-secondary);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.performance-weekday {
+  display: block;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.performance-table thead strong {
+  display: block;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+}
+
+
+/* Fixed metric row dimensions */
+
+.performance-table tbody tr,
+.performance-table tbody th,
+.performance-table tbody td {
+  height: var(--performance-row-height);
+}
+
+.performance-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.performance-metric-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  height: calc(var(--performance-row-height) - 1px);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.performance-metric-name > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.performance-metric-name .metric-info-button {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+
+/* Sticky metric and WTD columns */
+
+.performance-table .performance-metric-column {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  text-align: left;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+.performance-table .performance-wtd {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: var(--color-surface-secondary);
+  border-left: 1px solid var(--color-border);
+}
+
+.performance-table thead .performance-metric-column {
+  background: var(--color-surface-secondary);
+}
+
+
+/* Stable actual and comparison slots */
+
+.performance-cell {
+  display: grid;
+  grid-template-rows: 15px 12px;
+  align-content: center;
+  justify-items: end;
+  gap: 1px;
+  height: calc(var(--performance-row-height) - 1px);
+  min-width: 0;
+}
+
+.performance-cell strong {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 500;
+}
+
+.performance-wtd .performance-cell strong {
+  font-weight: 650;
+}
+
+.performance-cell-change {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* Hide changes without removing their allocated space. */
+
+.performance-cell-change[data-visible="false"] {
+  visibility: hidden;
+}
+
+.performance-cell-change[data-tone="positive"] {
+  color: var(--color-success);
+}
+
+.performance-cell-change[data-tone="negative"] {
+  color: var(--color-danger);
+}
+
+
+/* Row interaction and availability */
+
+.performance-table tbody tr:hover > * {
+  background: var(--color-surface-secondary);
+}
+
+.performance-table [data-state="ERROR"] {
+  color: var(--color-danger);
+}
+
+.performance-table [data-state="PENDING"],
+.performance-table [data-state="NOT_AVAILABLE"],
+.performance-table [data-state="LOADING"] {
+  color: var(--color-text-secondary);
+}
+
+
+/* Compact reporting notes */
+
+.performance-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+
+/* Existing expandable trend chart */
+
+.performance-trend-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.performance-trend-toggle > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.performance-trend-toggle:hover {
+  background: var(--color-surface-secondary);
+}
+
+@media (max-width: 650px) {
+  .performance-matrix {
+    --performance-label-size: 190px;
+  }
+
+  .performance-table .performance-wtd {
+    position: static;
+  }
+}
+
+
+/* Final reporting table header treatment */
+
+.performance-matrix .performance-table thead th {
+  background-color: var(--brand-sidebar);
+  color: #ffffff;
+  border-bottom: 0;
+  border-right: 1px solid rgb(255 255 255 / 10%);
+  text-align: center;
+}
+
+.performance-matrix .performance-table thead .performance-metric-column {
+  background-color: var(--brand-sidebar);
+  color: #ffffff;
+  text-align: left;
+}
+
+.performance-matrix .performance-table thead .performance-weekday {
+  color: rgb(255 255 255 / 75%);
+}
+
+.performance-matrix .performance-table thead strong {
+  color: #ffffff;
+}
+
+.performance-matrix .performance-table thead .performance-wtd {
+  background-color: color-mix(
+    in srgb,
+    var(--brand-sidebar) 85%,
+    black 15%
+  );
+}
+
+.performance-matrix {
+  --performance-label-size: 280px;
+}
+
+.performance-matrix .performance-cell {
+  justify-items: center;
+}
+
+.performance-matrix .performance-table tbody td {
+  text-align: center;
+}
+
+
+/* Final performance matrix typography */
+
+.performance-matrix .performance-category-title h3 {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.performance-matrix .performance-table thead th {
+  text-align: center;
+}
+
+.performance-matrix .performance-table thead .performance-weekday {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12px;
+}
+
+.performance-matrix .performance-table thead strong {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.performance-matrix .performance-table thead .performance-metric-column {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.performance-matrix .performance-metric-name {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.performance-matrix .performance-table tbody td {
+  text-align: right;
+}
+
+.performance-matrix .performance-cell {
+  grid-template-rows: 17px 11px;
+  justify-items: end;
+  align-content: center;
+  gap: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.performance-matrix .performance-cell strong {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 17px;
+}
+
+.performance-matrix .performance-wtd .performance-cell strong {
+  font-weight: 700;
+}
+
+.performance-matrix .performance-cell-change {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 11px;
+}
+
+
+/* WTD aggregation abbreviation */
+
+.performance-matrix .performance-wtd .performance-cell-change {
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1px;
+}
+
+
+/* Medium-dark metric row headers */
+
+.performance-matrix .performance-table tbody .performance-metric-column {
+  background: var(--brand-primary);
+  color: #ffffff;
+  border-right: 1px solid rgb(255 255 255 / 15%);
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+}
+
+.performance-matrix .performance-metric-name {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.performance-matrix .performance-metric-name .metric-info-button {
+  color: rgb(255 255 255 / 70%);
+}
+
+.performance-matrix .performance-metric-name .metric-info-button:hover {
+  color: #ffffff;
+}
+
+.performance-matrix .performance-table tbody tr:hover .performance-metric-column {
+  background: color-mix(
+    in srgb,
+    var(--brand-primary) 90%,
+    black 10%
+  );
+}
+
+.performance-matrix .performance-metric-name .metric-info-button:focus-visible {
+  outline: 1px solid #ffffff;
+  outline-offset: 2px;
+}

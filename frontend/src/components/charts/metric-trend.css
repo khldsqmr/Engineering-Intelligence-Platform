@@ -1,0 +1,251 @@
+.trend-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 760px;
+}
+
+.trend-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trend-select > span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.trend-select select {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 13px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.trend-select select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.trend-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.trend-legend > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trend-legend i {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.trend-legend i[data-series="primary"] {
+  background: var(--chart-current);
+}
+
+.trend-legend i[data-series="secondary"] {
+  background: var(--chart-secondary);
+}
+
+.trend-chart-scroll {
+  min-width: 0;
+  overflow: visible;
+}
+
+.trend-chart {
+  width: 100%;
+  min-width: 0;
+}
+
+.trend-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.trend-status button {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+@media (max-width: 650px) {
+  .trend-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+/* Compact trend chart presentation */
+
+.chart-card:has(.trend-chart) {
+  padding: 16px;
+  gap: 12px;
+}
+
+.chart-card:has(.trend-chart) .chart-card-content {
+  gap: 8px;
+}
+
+.trend-controls {
+  gap: 12px;
+  max-width: 640px;
+}
+
+.trend-select {
+  gap: 4px;
+}
+
+.trend-select > span {
+  font-size: 11px;
+}
+
+.trend-select select {
+  min-height: 32px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.trend-legend {
+  gap: 8px 16px;
+  font-size: 11px;
+}
+
+.trend-chart {
+  min-width: 0;
+}
+
+.chart-card:has(.trend-chart) .chart-note {
+  padding-top: 8px;
+}
+
+
+/* Compact analytical tooltip */
+
+.trend-tooltip {
+  width: max-content;
+  max-width: min(360px, calc(100vw - 32px));
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 3px 12px rgb(0 0 0 / 10%);
+  font-size: 11px;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.trend-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.trend-tooltip-header strong {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.trend-tooltip-header > span {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.trend-tooltip-row {
+  display: grid;
+  grid-template-columns: 6px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+}
+
+.trend-tooltip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.trend-tooltip-dot[data-series="primary"] {
+  background: var(--chart-current);
+}
+
+.trend-tooltip-dot[data-series="secondary"] {
+  background: var(--chart-secondary);
+}
+
+.trend-tooltip-name {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.trend-tooltip-row > strong {
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.trend-tooltip-change {
+  min-width: 48px;
+  text-align: right;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.trend-tooltip-change[data-tone="positive"] {
+  color: var(--color-success);
+}
+
+.trend-tooltip-change[data-tone="negative"] {
+  color: var(--color-danger);
+}
+
+.trend-tooltip-status {
+  display: block;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+
+/* Remove mouse-induced chart focus outlines */
+
+.trend-chart .recharts-wrapper:focus:not(:focus-visible),
+.trend-chart .recharts-surface:focus:not(:focus-visible),
+.trend-chart [tabindex]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Preserve theme-aware keyboard focus */
+
+.trend-chart [tabindex]:focus-visible {
+  outline: 1px solid var(--color-primary);
+  outline-offset: 3px;
+}

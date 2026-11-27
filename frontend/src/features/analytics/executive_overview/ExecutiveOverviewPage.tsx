@@ -16,6 +16,16 @@ import {
   ExecutiveKPISummary,
 } from './components/ExecutiveKPISummary'
 
+
+import { EngineeringActivityChart } from './components/EngineeringActivityChart'
+import { ReviewCycleChart } from './components/ReviewCycleChart'
+import { CodeChangeChart } from './components/CodeChangeChart'
+import { HistoricalBenchmarkChart } from './components/HistoricalBenchmarkChart'
+
+
+import { MetricTrendChart } from '../../../components/charts/MetricTrendChart'
+import { useDailyInsights } from '../../../hooks/useDailyInsights'
+
 export function ExecutiveOverviewPage() {
   const week = useReportingWeek()
 
@@ -25,6 +35,11 @@ export function ExecutiveOverviewPage() {
     isError,
     refetch,
   } = week.query
+
+  const daily = useDailyInsights(
+    data,
+    data?.availableHistory,
+  )
 
   return (
     <section className="workspace-page">
@@ -87,6 +102,25 @@ export function ExecutiveOverviewPage() {
           <ExecutiveKPISummary
             metrics={data.metrics}
           />
+
+          <MetricTrendChart
+            metrics={data.metrics}
+            days={daily.days}
+            isLoading={daily.isLoading}
+            hasErrors={daily.hasErrors}
+            onRetry={daily.retryFailed}
+          />
+
+          
+          <section
+            className="analytics-chart-grid"
+            aria-label="Executive analytical charts"
+          >
+            <EngineeringActivityChart metrics={data.metrics} />
+            <ReviewCycleChart metrics={data.metrics} />
+            <CodeChangeChart metrics={data.metrics} />
+            <HistoricalBenchmarkChart metrics={data.metrics} />
+          </section>
 
           <div className="analytical-metadata">
             Data refreshed:{' '}

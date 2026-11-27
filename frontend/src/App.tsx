@@ -21,6 +21,8 @@ import {
   ExecutiveOverviewPage,
 } from './features/analytics/executive_overview/ExecutiveOverviewPage'
 
+import { PerformanceManagementPage } from './features/analytics/performance_management/PerformanceManagementPage'
+
 import './App.css'
 
 function App() {
@@ -38,6 +40,8 @@ function App() {
                 element={
                   item.path === '/'
                     ? <ExecutiveOverviewPage />
+                    : item.path === '/performance'
+                      ? <PerformanceManagementPage />
                     : (
                       <WorkspacePage
                         category={group.label}

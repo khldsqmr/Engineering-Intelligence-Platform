@@ -470,3 +470,19 @@
   font-family: var(--font-mono);
   overflow-wrap: anywhere;
 }
+
+
+/* Metadata source icons */
+
+.metadata-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.metadata-source svg {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}

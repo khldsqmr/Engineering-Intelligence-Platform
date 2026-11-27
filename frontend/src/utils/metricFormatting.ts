@@ -70,17 +70,23 @@ export function formatMetricChange(
 ): string {
   const change = getMetricChange(metric)
 
-  if (!isAvailable(change)) {
+  if (change === null || !Number.isFinite(change)) {
     return 'N/A'
   }
 
-  const suffix = metric.metricUnit === 'PERCENT'
+  const unit = metric.metricUnit === 'PERCENT'
     ? ' pp'
     : '%'
 
-  const sign = change > 0 ? '+' : ''
+  const rounded = Number(change.toFixed(2))
 
-  return `${sign}${formatNumber(change)}${suffix}`
+  if (rounded === 0) {
+    return `— 0${unit}`
+  }
+
+  const direction = rounded > 0 ? '▲' : '▼'
+
+  return `${direction} ${formatNumber(Math.abs(rounded))}${unit}`
 }
 
 export function getChangeTone(
