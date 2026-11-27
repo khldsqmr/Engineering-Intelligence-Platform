@@ -1,4 +1,3 @@
-cat > .github/workflows/ci.yaml <<'EOF'
 name: Continuous Integration
 
 on:
@@ -123,4 +122,3 @@ jobs:
 
       - name: Compile and build frontend
         run: npm run build
-EOF
