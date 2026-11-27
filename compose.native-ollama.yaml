@@ -1,0 +1,17 @@
+services:
+
+  ollama:
+    profiles:
+      - container-ollama
+
+  ollama-init:
+    profiles:
+      - container-ollama
+
+  backend:
+    environment:
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+
+    depends_on: !override
+      demo-init:
+        condition: service_completed_successfully

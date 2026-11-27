@@ -1,0 +1,32 @@
+services:
+
+  demo-init:
+    profiles:
+      - demo-only
+
+  backend:
+    env_file:
+      - .env
+
+    environment:
+      APP_ENV: live
+      DATABASE_PATH: /app/data/eip.db
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY:-apache/airflow}
+      OLLAMA_BASE_URL: http://ollama:11434
+
+    depends_on: !override
+      ollama-init:
+        condition: service_completed_successfully
+
+    volumes: !override
+      - live-data:/app/data
+
+    ports: !override
+      - "127.0.0.1:8003:8000"
+
+  frontend:
+    ports: !override
+      - "127.0.0.1:8082:80"
+
+volumes:
+  live-data:

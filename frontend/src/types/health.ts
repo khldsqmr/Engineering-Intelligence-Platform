@@ -6,4 +6,5 @@ export interface HealthResponse {
   service: string
   status: 'healthy'
   version: string
+  mode: 'demo' | 'live'
 }

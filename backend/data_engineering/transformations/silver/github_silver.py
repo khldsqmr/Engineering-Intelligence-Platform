@@ -14,6 +14,7 @@ Responsibilities:
 """
 
 import json
+import os
 import sqlite3
 
 from dotenv import dotenv_values
@@ -533,7 +534,7 @@ def refresh_silver(database_path: str, repository: str) -> dict:
 # ---------------------------------------------------------------------
 
 if __name__ == "__main__":
-    environment = dotenv_values(".env")
+    environment = {**dotenv_values(".env"), **os.environ}
 
     database_path = environment.get("DATABASE_PATH") or "data/eip.db"
 

@@ -191,6 +191,15 @@ export function AppShell() {
 
           <div className="header-actions">
 
+            {health?.mode === 'demo' && (
+              <div
+                className="deployment-mode-indicator"
+                title="Historical public GitHub snapshot. No GitHub token required. AI inference runs locally."
+              >
+                <span>Demo Mode</span>
+              </div>
+            )}
+
             <div
               className="health-indicator"
               data-state={

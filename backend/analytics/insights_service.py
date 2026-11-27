@@ -10,6 +10,7 @@ Responsibilities:
     - Keep numerical calculations independent of the LLM.
 """
 
+import os
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -38,7 +39,7 @@ def load_insights(
 ) -> dict:
     """Return deterministic engineering insights for a UTC period."""
 
-    environment = dotenv_values(".env")
+    environment = {**dotenv_values(".env"), **os.environ}
 
     database_path = Path(environment.get("DATABASE_PATH") or "data/eip.db")
 

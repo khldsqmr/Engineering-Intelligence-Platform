@@ -30,6 +30,7 @@ are handled outside this client.
 import asyncio
 import re
 from dataclasses import dataclass
+from importlib.metadata import version
 from types import TracebackType
 from typing import Any, Self
 
@@ -173,7 +174,7 @@ class GitHubClient:
                 "Accept": "application/vnd.github+json",
                 "Authorization": f"Bearer {token}",
                 "X-GitHub-Api-Version": GITHUB_API_VERSION,
-                "User-Agent": "EIP/0.1.0",
+                "User-Agent": f"EIP/{version('engineering-intelligence-platform')}",
             },
             timeout=httpx.Timeout(timeout_seconds),
             follow_redirects=False,
