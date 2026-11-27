@@ -26,7 +26,7 @@ async def test_health_endpoint() -> None:
     assert response.status_code == 200
 
     assert response.json() == {
-        "service": "CodePulse",
+        "service": "Engineering Intelligence Platform",
         "status": "healthy",
         "version": version("codepulse"),
     }

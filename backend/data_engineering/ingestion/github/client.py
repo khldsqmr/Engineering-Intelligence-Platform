@@ -173,7 +173,7 @@ class GitHubClient:
                 "Accept": "application/vnd.github+json",
                 "Authorization": f"Bearer {token}",
                 "X-GitHub-Api-Version": GITHUB_API_VERSION,
-                "User-Agent": "CodePulse-EIP/0.1.0",
+                "User-Agent": "EIP/0.1.0",
             },
             timeout=httpx.Timeout(timeout_seconds),
             follow_redirects=False,

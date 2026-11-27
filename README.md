@@ -1,11 +1,11 @@
 
-# CodePulse
+# Engineering Intelligence Platform (EIP)
 
 AI-powered Engineering Intelligence Platform.
 
 ## Overview
 
-CodePulse is designed to transform engineering collaboration
+EIP is designed to transform engineering collaboration
 data into actionable analytical insights and evidence-based
 AI narratives.
 
