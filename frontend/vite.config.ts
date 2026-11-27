@@ -3,7 +3,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// CodePulse frontend configuration
+// EIP frontend configuration
 export default defineConfig({
   plugins: [react()],
 

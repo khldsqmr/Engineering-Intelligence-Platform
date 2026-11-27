@@ -1,4 +1,4 @@
-"""Reusable Ollama provider for CodePulse AI Intelligence."""
+"""Reusable Ollama provider for EIP AI Intelligence."""
 
 import os
 import time

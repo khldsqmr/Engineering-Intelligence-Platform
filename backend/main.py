@@ -1,5 +1,5 @@
 """
-CodePulse application entry point.
+Engineering Intelligence Platform application entry point.
 
 Initializes the FastAPI application and registers API routers.
 Retrieves the application version from installed package metadata.
@@ -18,7 +18,7 @@ from backend.api.routes.intelligence import router as intelligence_router
 # ---------------------------------------------------------------------
 
 app = FastAPI(
-    title="CodePulse",
+    title="Engineering Intelligence Platform",
     description="AI-powered engineering intelligence platform.",
     version=version("codepulse"),
 )

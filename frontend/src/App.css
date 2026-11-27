@@ -1,184 +1,492 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* =========================================================
+   01. Application Layout
+   ========================================================= */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-background);
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
-}
-
-#center {
+.sidebar {
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
+  flex-shrink: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  padding: 24px 12px 16px;
+  overflow-y: auto;
+  background: var(--brand-sidebar);
+  color: #F1EDEF;
+  transition: width var(--transition-normal);
+}
+
+.app-shell[data-collapsed="true"] .sidebar {
+  width: var(--sidebar-collapsed-width);
+  padding-inline: 8px;
+}
+
+
+/* =========================================================
+   02. EIP Branding
+   ========================================================= */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 64px;
+  padding: 0 4px 24px;
+}
+
+.brand-icon {
+  display: grid;
   place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  color: var(--brand-accent);
+  background: rgb(255 255 255 / 10%);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: var(--radius-md);
 }
 
-#next-steps {
+.brand-name {
+  color: var(--brand-accent);
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  margin-top: 3px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 75%);
+}
+
+.app-shell[data-collapsed="true"] .brand {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+
+/* =========================================================
+   03. Sidebar Navigation
+   ========================================================= */
+
+.sidebar-navigation {
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  flex-direction: column;
+  gap: 24px;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
+.navigation-group {
   display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  flex-direction: column;
+  gap: 4px;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.navigation-group + .navigation-group {
+  padding-top: 18px;
+  border-top: 1px solid rgb(255 255 255 / 12%);
 }
 
-.ticks {
+.navigation-label {
+  margin-bottom: 5px;
+  padding-inline: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 70%);
+}
+
+.navigation-item {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 42px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: rgb(255 255 255 / 85%);
+  font-size: 13px;
+  transition: background var(--transition-fast);
+}
+
+.navigation-item svg {
+  flex-shrink: 0;
+}
+
+.navigation-item:hover {
+  background: rgb(255 255 255 / 9%);
+  color: white;
+}
+
+.navigation-item.active {
+  background: rgb(255 255 255 / 14%);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.navigation-item.active svg {
+  color: var(--brand-accent);
+}
+
+.navigation-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--brand-accent);
+  border-radius: 3px;
+}
+
+.sidebar a:focus-visible {
+  outline-color: var(--brand-accent);
+}
+
+.app-shell[data-collapsed="true"] .navigation-item {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 24px 8px 8px;
+  color: rgb(255 255 255 / 70%);
+  font-size: 11px;
+}
+
+.app-shell[data-collapsed="true"] .sidebar-footer {
+  justify-content: center;
+}
+
+
+/* =========================================================
+   04. Main Workspace and Header
+   ========================================================= */
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.workspace-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--header-height);
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-navigation,
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-navigation {
+  min-width: 0;
+}
+
+.header-actions {
+  flex-shrink: 0;
+}
+
+.header-divider {
+  height: 24px;
+  width: 1px;
+  background: var(--color-border);
+}
+
+.header-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.header-breadcrumb strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.icon-button:hover {
+  background: var(--color-surface-secondary);
+}
+
+.health-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--color-text-secondary);
+}
+
+.health-indicator[data-state="connected"] {
+  color: var(--color-success);
+}
+
+.health-indicator[data-state="error"] {
+  color: var(--color-danger);
+}
+
+.workspace-content {
   width: 100%;
+  max-width: var(--content-width);
+  padding: var(--space-lg);
+  margin-inline: auto;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+
+/* =========================================================
+   05. Standard Page Hierarchy
+   ========================================================= */
+
+.workspace-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.page-category {
+  margin-bottom: 7px;
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.page-heading h1 {
+  color: var(--color-text);
+  font-size: var(--font-page-title);
+  font-weight: 650;
+  letter-spacing: -0.7px;
+  line-height: 1.3;
+}
+
+.page-description {
+  margin-top: 7px;
+  color: var(--color-text-secondary);
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* =========================================================
+   06. Shared Empty State
+   ========================================================= */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 300px;
+  padding: var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.empty-state-icon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-secondary);
+  color: var(--color-primary);
+}
+
+.empty-state h2 {
+  font-size: var(--font-section-title);
+  font-weight: 600;
+}
+
+.empty-state p {
+  max-width: 440px;
+  color: var(--color-text-secondary);
+}
+
+
+/* =========================================================
+   07. Responsive Layout
+   ========================================================= */
+
+@media (max-width: 900px) {
+  :root {
+    --sidebar-width: 225px;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  .workspace-content {
+    padding: var(--space-md);
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+
+  .workspace-header {
+    padding-inline: 16px;
+  }
+
+  .header-breadcrumb > span {
+    display: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .sidebar,
+  .app-shell[data-collapsed="true"] .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 12px;
+  }
+
+  .sidebar-navigation {
+    gap: 12px;
+  }
+
+  .navigation-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .navigation-label {
+    width: 100%;
+  }
+
+  .navigation-item {
+    font-size: 12px;
+    min-height: 36px;
+    padding: 7px 9px;
+  }
+
+  .brand {
+    padding-bottom: 16px;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .workspace-header {
+    position: static;
+    flex-wrap: wrap;
+  }
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .page-heading h1 {
+    font-size: 24px;
+  }
+
+  .health-indicator span {
+    display: none;
+  }
+}
+
+
+/* Compact desktop navigation */
+
+@media (min-width: 651px) {
+  :is(aside, .app-sidebar, .sidebar):has(nav) nav {
+    overflow: visible;
+    max-height: none;
+    gap: 10px;
+    padding-block: 8px;
+  }
+
+  :is(aside, .app-sidebar, .sidebar):has(nav) nav a {
+    min-height: 32px;
+    padding-block: 6px;
+  }
+}
+
+/* Preserve navigation access on unusually short windows. */
+
+@media (min-width: 651px) and (max-height: 620px) {
+  :is(aside, .app-sidebar, .sidebar):has(nav) nav {
+    overflow-y: auto;
+    min-height: 0;
+  }
+}
+
+
+/* Keep desktop sidebar navigation compact */
+
+@media (min-width: 651px) and (min-height: 720px) {
+  .sidebar {
+    overflow-y: visible;
+  }
+
+  .sidebar-navigation {
+    gap: 8px;
+  }
+
+  .sidebar-navigation a {
+    min-height: 30px;
+    padding-block: 5px;
+  }
+}
+
+/* Preserve access on shorter browser windows */
+
+@media (min-width: 651px) and (max-height: 719px) {
+  .sidebar {
+    overflow-y: auto;
   }
 }
