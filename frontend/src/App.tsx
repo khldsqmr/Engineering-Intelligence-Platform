@@ -25,6 +25,12 @@ import { PerformanceManagementPage } from './features/analytics/performance_mana
 
 import { EngineeringLifecyclePage } from './features/analytics/engineering_lifecycle/EngineeringLifecyclePage'
 
+import { AIInsightsPage } from './features/intelligence/ai_insights/AIInsightsPage'
+
+import { ContextExplorerPage } from './features/intelligence/context_explorer/ContextExplorerPage'
+
+import { IntelligenceHistoryPage } from './features/intelligence/intelligence_history/IntelligenceHistoryPage'
+
 import './App.css'
 
 function App() {
@@ -46,6 +52,12 @@ function App() {
                       ? <PerformanceManagementPage />
                       : item.path === '/lifecycle'
                         ? <EngineeringLifecyclePage />
+                        : item.path === '/intelligence'
+                          ? <AIInsightsPage />
+                          : item.path === '/context'
+                            ? <ContextExplorerPage />
+                            : item.path === '/history'
+                              ? <IntelligenceHistoryPage />
                     : (
                       <WorkspacePage
                         category={group.label}

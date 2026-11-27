@@ -1,0 +1,239 @@
+.assessment-details {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.assessment-details > summary {
+  padding: 12px;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.assessment-details[open] > summary {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.assessment-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px;
+}
+
+.assessment-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.assessment-section + .assessment-section {
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.assessment-section-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.assessment-section-header > svg {
+  color: var(--color-primary);
+}
+
+.assessment-section-header h4 {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.assessment-section-header .intelligence-type-label {
+  margin-left: auto;
+}
+
+.assessment-description {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.assessment-table-container {
+  overflow-x: auto;
+}
+
+.assessment-table {
+  width: 100%;
+  min-width: 500px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.assessment-table thead th {
+  padding: 9px 10px;
+  background: var(--brand-sidebar);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  border-right: 1px solid rgb(255 255 255 / 10%);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.assessment-table thead th:first-child {
+  width: 48%;
+  text-align: left;
+}
+
+.assessment-table tbody th {
+  background: var(--brand-primary);
+  color: #fff;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgb(255 255 255 / 15%);
+}
+
+.assessment-table tbody th strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.assessment-table tbody th small {
+  display: block;
+  margin-top: 3px;
+  color: rgb(255 255 255 / 80%);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.assessment-table td {
+  padding: 8px 10px;
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.assessment-score-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.assessment-score-track {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--color-surface-secondary);
+  overflow: hidden;
+}
+
+.assessment-score-track > span {
+  display: block;
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: inherit;
+}
+
+.assessment-total,
+.assessment-validation {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-secondary);
+  font-size: 12px;
+}
+
+.assessment-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.assessment-total strong {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.assessment-validation strong {
+  color: var(--color-primary);
+}
+
+.assessment-metadata {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 16px;
+  margin: 0;
+  font-size: 11px;
+}
+
+.assessment-metadata dt,
+.assessment-metadata dd {
+  margin: 0;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.assessment-metadata dt {
+  color: var(--color-text-secondary);
+}
+
+.assessment-metadata dd {
+  font-weight: 500;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.assessment-record-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.assessment-limitations {
+  padding: 12px;
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.assessment-limitations h5 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.assessment-limitations ul {
+  padding-left: 18px;
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+}
+
+.assessment-nested-details {
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.assessment-nested-details summary {
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.assessment-nested-details p {
+  margin-top: 8px;
+}
+
+.assessment-nested-details small {
+  color: var(--color-text-secondary);
+}
+
+.assessment-retry {
+  margin-left: 8px;
+  color: var(--color-primary);
+  cursor: pointer;
+}
