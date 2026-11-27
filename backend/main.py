@@ -11,6 +11,7 @@ from fastapi import FastAPI
 
 from backend.api.routes.health import router as health_router
 from backend.api.routes.insights import router as insights_router
+from backend.api.routes.intelligence import router as intelligence_router
 
 # ---------------------------------------------------------------------
 # 01. Application initialization
@@ -29,3 +30,5 @@ app = FastAPI(
 
 app.include_router(health_router)
 app.include_router(insights_router)
+
+app.include_router(intelligence_router)
