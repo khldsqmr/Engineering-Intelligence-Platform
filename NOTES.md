@@ -279,7 +279,13 @@ calibrated probability.
 Ollama was selected to provide locally hosted inference
 without requiring a commercial LLM API subscription.
 
-The configured default model is Qwen 2.5 7B.
+The configured default model is Qwen 3 4B Instruct
+(`qwen3:4b-instruct`). Alternative Ollama models remain
+configurable through the local environment.
+
+The default was selected based on observed local execution
+behavior and a smaller model download footprint, not a
+statistically validated model quality comparison.
 
 Local inference provides control over model configuration
 and reduces external data transmission.
@@ -386,10 +392,13 @@ The automated backend test suite covers areas including:
 - Numerical grounding and validation.
 - Report hypotheses and generation policies.
 - Intelligence history and persistence.
+- Default model configuration and overrides.
+- Historical intelligence bootstrap and period discovery.
+- Bootstrap cache reuse, rejection and HTTP error handling.
 
 At the latest validated development checkpoint:
 
-- 311 automated backend tests passed.
+- 328 automated backend tests passed.
 - Ruff lint checks passed.
 - Frontend lint returned zero errors and warnings.
 - TypeScript and production frontend build succeeded.
@@ -554,3 +563,103 @@ The live validation also identified an opportunity to improve counter-evidence
 selection and distinguish directly supported interpretations from plausible
 but unverified explanations. Code change size must not be treated as a direct
 measure of technical complexity.
+
+
+## Fresh-Clone Acceptance Validation
+
+An isolated clone of the public repository was deployed
+using a separate Docker Compose project, local database
+and application ports. The existing host Ollama runtime
+and read-only GitHub credential were reused.
+
+Apache Airflow data was ingested into an initially empty
+analytical database on November 27, 2026.
+
+| Validation | Observed result |
+|---|---|
+| Bronze source records | 8,790 |
+| Bronze PR observations | 5,000 |
+| Valid Silver pull requests | 4,999 |
+| Invalid PR observations excluded | 1 |
+| Enriched merged pull requests | 714 |
+| Review records | 3,075 |
+| Gold lifecycle records | 4,999 |
+| Registered metrics | 14 |
+| Materialized reporting periods | 3 |
+| Gold period facts | 42 |
+| SQLite integrity | Passed |
+| Deterministic analytics endpoint | Passed |
+| Persistent intelligence cache | Passed |
+| Persistence across backend restart | Passed |
+| Backend regression suite | 328 passed |
+| Source coverage | ESTIMATED |
+
+The ingestion attempted 1,481 GitHub API requests.
+Historical coverage remains estimated rather than
+confirmed exhaustive.
+
+### Historical Intelligence Bootstrap
+
+Historical AI intelligence is initially empty in a fresh
+installation.
+
+The optional bootstrap utility discovers supported
+reporting periods through the analytical API and invokes
+the existing narrative endpoint chronologically.
+
+It preserves all numerical grounding, evidence validation,
+evaluation and persistence policies.
+
+The live bootstrap processed three reporting periods:
+
+| Reporting period (exclusive end) | Outcome |
+|---|---|
+| November 6 to November 13 | Newly approved |
+| November 13 to November 20 | Newly approved |
+| November 20 to November 27 | Existing approved cache reused |
+
+Subsequent forced generation for the latest period
+retrieved both earlier eligible intelligence records.
+
+Existing cached narratives are not automatically regenerated
+when additional historical intelligence becomes available.
+Explicit forced generation is required when refreshed
+historical context is needed.
+
+Historical context retrieval does not establish that the
+model meaningfully synthesizes every retrieved observation.
+
+### Observed Model Evaluation Behavior
+
+Two local model configurations were exercised against
+the same analytical reporting period.
+
+- Qwen 2.5 7B generated a numerically valid candidate
+  that was rejected after semantic evaluation identified
+  an insufficiently supported interpretation.
+- Qwen 3 4B Instruct generated an approved candidate
+  with an evaluation score of 100 and confidence of 60.
+
+Manual inspection identified incomplete counter-evidence
+selection, imprecise statistical terminology, speculative
+explanations and occasional mixed-language output.
+
+A hypothesis concerning larger code changes was approved
+despite a decline in median lines changed.
+
+Automated approval is not equivalent to independently
+verified analytical correctness. Separate model evaluation
+cannot eliminate correlated reasoning errors.
+
+A curated evaluation benchmark, stronger counter-evidence
+checks, language consistency validation and improved cache
+freshness policies remain future development priorities.
+
+### Execution Trade-off
+
+Ingestion and transformation stages execute sequentially
+through documented commands. Historical AI generation
+is available as a separate optional utility.
+
+Recurring scheduling and distributed workflow orchestration
+are outside the current local evaluation scope.

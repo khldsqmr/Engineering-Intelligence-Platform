@@ -39,7 +39,7 @@ class OllamaProvider:
         self,
         *,
         base_url: str = "http://127.0.0.1:11434",
-        model: str = "qwen2.5:7b",
+        model: str = "qwen3:4b-instruct",
         timeout_seconds: float = 120.0,
         transport: httpx.BaseTransport | None = None,
     ):
@@ -83,7 +83,7 @@ class OllamaProvider:
                 model
                 or os.getenv("OLLAMA_MODEL")
                 or environment.get("OLLAMA_MODEL")
-                or "qwen2.5:7b"
+                or "qwen3:4b-instruct"
             ),
         )
 
