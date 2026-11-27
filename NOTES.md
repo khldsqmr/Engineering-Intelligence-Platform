@@ -805,3 +805,35 @@ incorporate the applicable source and repository scope.
 The objective is to reuse the reasoning, validation,
 evaluation and presentation architecture while extending
 the underlying integration and semantic models.
+
+## v0.1.1 Token-Free Fresh-Clone Acceptance
+
+An independent clone of release candidate e5198bc was
+deployed on November 27, 2026, using a new Docker Compose
+project and newly created database and model volumes.
+
+No populated environment file, GitHub credentials,
+pre-existing analytical database or host Ollama service
+was required by the deployment.
+
+| Validation | Observed result |
+|---|---|
+| Startup duration | 39.727 seconds |
+| Automatic model download | 2.5 GB |
+| Database restoration | Passed |
+| Gold lifecycle records | 4,999 |
+| Gold period facts | 42 |
+| Historical intelligence records | 5 |
+| Deterministic analytics | 14 metrics |
+| Historical narrative retrieval | Passed |
+| Frontend HTTP accessibility | Passed |
+| Credential isolation | Passed |
+| Deployment mode | demo |
+| Application version | 0.1.1 |
+
+Existing Docker image build caches were available.
+Startup duration is hardware, network and cache dependent.
+
+The acceptance environment used independent analytical
+and model volumes. Existing development databases and
+model volumes were preserved.
