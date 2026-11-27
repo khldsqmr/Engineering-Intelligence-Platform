@@ -40,18 +40,15 @@ SCHEMA_FILES = (
     "00_control/02_eip_vw_control_pipelineConfig_static.sql",
     "00_control/03_eip_vw_control_metricRegistry_static.sql",
     "00_control/04_eip_tbl_control_ingestionRunHistory_log.sql",
-
     # Bronze layer
     "01_bronze/01_eip_tbl_bronze_githubRepositories_daily.sql",
     "01_bronze/02_eip_tbl_bronze_githubPullRequests_daily.sql",
     "01_bronze/03_eip_tbl_bronze_githubPullRequestDetails_daily.sql",
     "01_bronze/04_eip_tbl_bronze_githubReviews_daily.sql",
-
     # Silver layer
     "02_silver/01_eip_tbl_silver_repositories_daily.sql",
     "02_silver/02_eip_tbl_silver_pullRequests_daily.sql",
     "02_silver/03_eip_tbl_silver_reviews_daily.sql",
-
     # Gold layer
     "03_gold/01_eip_tbl_gold_prLifecycle_wide.sql",
     "03_gold/02_eip_tbl_gold_periodFacts_long.sql",
