@@ -1,3 +1,4 @@
+import { EIPSelect } from '../common/EIPSelect'
 import { useState } from 'react'
 
 import {
@@ -267,53 +268,46 @@ export function MetricTrendChart({
         <label className="trend-select">
           <span>Primary metric</span>
 
-          <select
+          <EIPSelect
+            ariaLabel="Primary metric"
             value={primary.metricId}
-            onChange={event => {
-              const value = event.target.value
-
+            onChange={value => {
               setPrimaryId(value)
 
               if (value === secondaryId) {
                 setSecondaryId('none')
               }
             }}
-          >
-            {metrics.map(metric => (
-              <option
-                key={metric.metricId}
-                value={metric.metricId}
-              >
-                {metric.metricName}
-              </option>
-            ))}
-          </select>
+            groups={[{
+              options: metrics.map(metric => ({
+                value: metric.metricId,
+                label: metric.metricName,
+              })),
+            }]}
+          />
         </label>
 
         <label className="trend-select">
           <span>Secondary metric</span>
 
-          <select
+          <EIPSelect
+            ariaLabel="Secondary metric"
             value={secondary?.metricId ?? 'none'}
-            onChange={event =>
-              setSecondaryId(event.target.value)
-            }
-          >
-            <option value="none">None</option>
-
-            {metrics
-              .filter(metric =>
-                metric.metricId !== primary.metricId
-              )
-              .map(metric => (
-                <option
-                  key={metric.metricId}
-                  value={metric.metricId}
-                >
-                  {metric.metricName}
-                </option>
-              ))}
-          </select>
+            onChange={setSecondaryId}
+            groups={[{
+              options: [
+                { value: 'none', label: 'None' },
+                ...metrics
+                  .filter(metric =>
+                    metric.metricId !== primary.metricId
+                  )
+                  .map(metric => ({
+                    value: metric.metricId,
+                    label: metric.metricName,
+                  })),
+              ],
+            }]}
+          />
         </label>
 
       </div>
