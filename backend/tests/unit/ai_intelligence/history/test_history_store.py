@@ -629,19 +629,22 @@ def test_changed_metric_value_invalidates_cache(database, comparable_context, se
     assert workflow.call_count == 2
 
 
-def test_changed_history_invalidates_cache(database, comparable_context, service_dependencies):
+def test_changed_history_preserves_cache(database, comparable_context, service_dependencies):
     from backend.ai_intelligence.intelligence_service import (
         execute_intelligence,
+        retrieve_intelligence,
     )
 
     generator, evaluator, workflow = service_dependencies
 
-    execute_intelligence(
+    first = execute_intelligence(
         comparable_context,
         database,
         generator,
         evaluator,
     )
+
+    assert first.cacheHit is False
 
     prior = shift_period(comparable_context, 1)
 
@@ -658,8 +661,21 @@ def test_changed_history_invalidates_cache(database, comparable_context, service
         evaluator,
     )
 
-    assert second.cacheHit is False
-    assert workflow.call_count == 2
+    assert second.cacheHit is True
+    assert second.record["intelligenceId"] == first.record["intelligenceId"]
+
+    retrieved = retrieve_intelligence(
+        comparable_context,
+        database,
+        generator_model=generator.model,
+        evaluator_model=evaluator.model,
+    )
+
+    assert retrieved is not None
+    assert retrieved.cacheHit is True
+    assert retrieved.record["intelligenceId"] == first.record["intelligenceId"]
+
+    assert workflow.call_count == 1
 
 
 def test_changed_model_invalidates_cache(database, comparable_context, service_dependencies):

@@ -20,7 +20,7 @@ from backend.api.routes.intelligence import router as intelligence_router
 app = FastAPI(
     title="Engineering Intelligence Platform",
     description="AI-powered engineering intelligence platform.",
-    version=version("codepulse"),
+    version=version("engineering-intelligence-platform"),
 )
 
 

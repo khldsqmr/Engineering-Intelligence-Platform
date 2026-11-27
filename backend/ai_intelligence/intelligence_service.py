@@ -95,11 +95,14 @@ def execute_intelligence(
 
     max_attempts = 2 if enriched_context.userIntent.mode == "narrative" else 1
 
+    retry_feedback: tuple[str, ...] = ()
+
     for attempt in range(max_attempts):
         result = run_intelligence(
             enriched_context,
             generator,
             evaluator,
+            **({"retry_feedback": retry_feedback} if retry_feedback else {}),
         )
 
         # Persist every execution, including failed attempts.
@@ -124,6 +127,16 @@ def execute_intelligence(
         )
 
         if retryable and attempt + 1 < max_attempts:
+            retry_feedback = (
+                "The previous draft failed governance checks.",
+                "Use numerical placeholders instead of literal numbers.",
+                "Never use the same evidence reference as both supporting and counter-evidence.",
+                "Respect metric definitions, aggregation and direction.",
+                "Treat historical observations as prior-period context.",
+                "Do not repeat the observation as a hypothesis.",
+                "Use a null hypothesis when no defensible explanation is supported.",
+                "Keep all claims concise and complete.",
+            )
             continue
 
         return IntelligenceServiceResult(

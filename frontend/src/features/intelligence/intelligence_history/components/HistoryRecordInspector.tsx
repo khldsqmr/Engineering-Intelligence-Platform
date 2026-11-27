@@ -106,12 +106,18 @@ export function HistoryRecordInspector({
             </div>
 
             <div>
-              <small>AI Response Quality</small>
-              <strong>{record.evaluationScore ?? 'N/A'}</strong>
+              <small>
+                {record.evaluatorModel === 'deterministic-report'
+                  ? 'Report Validation'
+                  : 'AI Response Quality'}
+              </small>
+              <strong>{record.evaluatorModel === 'deterministic-report'
+                ? 'Passed'
+                : (record.evaluationScore ?? 'N/A')}</strong>
             </div>
 
             <div>
-              <small>Evidence Confidence</small>
+              <small>Heuristic Confidence</small>
               <strong>{record.confidenceScore ?? 'N/A'}</strong>
             </div>
 
@@ -126,6 +132,23 @@ export function HistoryRecordInspector({
             </div>
           </div>
 
+          <section className="history-narrative-section">
+            <h3>Interaction Type</h3>
+
+            <p>
+              {record.intelligenceMode === 'question'
+                ? 'Copilot · AI Reasoning'
+                : 'Proactive Intelligence Narrative'}
+            </p>
+
+            {record.question && (
+              <>
+                <h3>Original Question</h3>
+                <p>{record.question}</p>
+              </>
+            )}
+          </section>
+
           {!approved && (
             <div className="history-audit-notice">
               <Info size={16} />
@@ -138,11 +161,33 @@ export function HistoryRecordInspector({
             </div>
           )}
 
+          {record.manualReview && (
+            <section className="history-narrative-section">
+              <h3>Manual Governance Review</h3>
+
+              <p>{record.manualReview.reason}</p>
+
+              <p>
+                Original decision: {record.originalApprovalStatus}
+              </p>
+
+              <small>
+                The original model evaluation is preserved for audit.
+                This intelligence has been withdrawn from publication
+                and historical reuse.
+              </small>
+            </section>
+          )}
+
           {approved && (
             <>
               {typeof record.narrative === 'string' && (
                 <section className="history-narrative-section">
-                  <h3>Saved Performance Observation</h3>
+                  <h3>
+                    {record.intelligenceMode === 'question'
+                      ? 'Saved Copilot Answer'
+                      : 'Saved Performance Observation'}
+                  </h3>
                   <p>{record.narrative}</p>
                 </section>
               )}
@@ -187,6 +232,12 @@ export function HistoryRecordInspector({
               />
             )}
           </section>
+
+          <TechnicalDetails
+            title="Numerical grounding and evaluation audit"
+            description="Recorded evaluation findings and original numerical template, when available."
+            value={record.evaluation}
+          />
 
           <section className="history-narrative-section">
             <h3>Original Generation Artifacts</h3>

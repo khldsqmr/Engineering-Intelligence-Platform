@@ -4,7 +4,7 @@
 
 | Document Attribute | Value |
 |---|---|
-| Product | CodePulse |
+| Product | Engineering Intelligence Platform (EIP) |
 | Platform | Engineering Intelligence Platform |
 | Document Version | 1.0.0 |
 | Database Engine | SQLite |

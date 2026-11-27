@@ -75,6 +75,7 @@ export function getIntelligenceHistory(
   const parameters = new URLSearchParams({
     limit: String(limit),
     offset: String(offset),
+    mode: 'all',
   })
 
   return apiRequest<IntelligenceHistoryResponse>(

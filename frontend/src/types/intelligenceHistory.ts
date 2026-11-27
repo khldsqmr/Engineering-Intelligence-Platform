@@ -1,6 +1,8 @@
 import type { IntelligenceAudit } from './intelligenceAudit'
 
 export interface IntelligenceHistoryRecord {
+  intelligenceMode: 'narrative' | 'question'
+  question: string | null
   intelligenceId: string
   repository: string
   ingestionRunId: string
@@ -27,6 +29,14 @@ export interface IntelligenceHistoryResponse {
 }
 
 export interface IntelligenceHistoryDetail extends IntelligenceAudit {
+  originalApprovalStatus?: string
+  manualReview?: {
+    status: 'WITHDRAWN'
+    reason: string
+    reviewedAt: string
+  }
+  intelligenceMode: 'narrative' | 'question'
+  question: string | null
   repository: string
   ingestionRunId: string
   periodStart: string

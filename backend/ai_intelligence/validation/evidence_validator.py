@@ -13,6 +13,8 @@ from backend.ai_intelligence.reasoning.reasoning_schema import (
 def validate_evidence(
     output: NarrativeOutput,
     facts: list[AnalyticalContext],
+    *,
+    check_numerical_text: bool = True,
 ) -> list[str]:
     """Return grounding violations without modifying model output."""
 
@@ -77,7 +79,7 @@ def validate_evidence(
         if not text.strip():
             errors.append(f"{field_name}: empty text")
 
-        if re.search(r"\d", text):
+        if check_numerical_text and re.search(r"\d", text):
             errors.append(f"{field_name}: unexpected numerical text")
 
     return errors

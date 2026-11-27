@@ -9,6 +9,7 @@ from typing import Annotated
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, StringConstraints
+from pydantic import Field as PydanticField
 
 from backend.ai_intelligence.context.context_builder import (
     build_context,
@@ -105,6 +106,7 @@ def build_public_response(result, context):
         "intelligenceId": None,
         "cacheHit": False,
         "evaluationScore": None,
+        "evaluatorModel": None,
         "confidenceScore": None,
         "response": None,
         "evidence": [],
@@ -155,6 +157,9 @@ def build_public_response(result, context):
     payload.update(
         {
             "evaluationScore": record["evaluationScore"],
+            "evaluatorModel": (
+                record["evaluatorModel"] if "evaluatorModel" in record.keys() else None
+            ),
             "confidenceScore": record["confidenceScore"],
             "response": output,
             "evidence": evidence,
@@ -264,8 +269,9 @@ def get_intelligence_context(
 def list_intelligence_history(
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
+    mode: Annotated[str, Query(pattern="^(narrative|question|all)$")] = "narrative",
 ):
-    """Return paginated narrative execution history."""
+    """Return paginated intelligence execution history."""
 
     from backend.data_engineering.database.connection import (
         open_database,
@@ -281,20 +287,30 @@ def list_intelligence_history(
             SELECT COUNT(*)
             FROM eip_tbl_ai_intelligenceHistory_log
             WHERE repositoryId = ?
-              AND intelligenceMode = 'narrative'
+              AND (? = 'all' OR intelligenceMode = ?)
             """,
-            (context.repositoryId,),
+            (context.repositoryId, mode, mode),
         ).fetchone()[0]
 
         rows = connection.execute(
             """
             SELECT
                 intelligenceId,
+                intelligenceMode,
+                json_extract(
+                    contextSnapshotJson, '$.userIntent.question'
+                ) AS question,
                 repository,
                 ingestionRunId,
                 periodStart,
                 periodEndExclusive,
-                approvalStatus,
+                CASE
+                    WHEN json_extract(
+                        evaluationJson, '$.manualReview.status'
+                    ) = 'WITHDRAWN'
+                    THEN 'WITHDRAWN'
+                    ELSE approvalStatus
+                END AS approvalStatus,
                 evaluationScore,
                 confidenceScore,
                 deterministicValidationPassed,
@@ -306,12 +322,14 @@ def list_intelligence_history(
                 createdAt
             FROM eip_tbl_ai_intelligenceHistory_log
             WHERE repositoryId = ?
-              AND intelligenceMode = 'narrative'
+              AND (? = 'all' OR intelligenceMode = ?)
             ORDER BY createdAt DESC, intelligenceId DESC
             LIMIT ? OFFSET ?
             """,
             (
                 context.repositoryId,
+                mode,
+                mode,
                 limit,
                 offset,
             ),
@@ -345,11 +363,7 @@ def get_intelligence_history_detail(
         database_path,
     )
 
-    if (
-        record is None
-        or record["repositoryId"] != context.repositoryId
-        or record["intelligenceMode"] != "narrative"
-    ):
+    if record is None or record["repositoryId"] != context.repositoryId:
         raise HTTPException(
             status_code=404,
             detail="Intelligence record not found.",
@@ -375,6 +389,16 @@ def get_intelligence_history_detail(
         else:
             payload[key] = value
 
+    payload["question"] = (payload.get("context") or {}).get("userIntent", {}).get("question")
+
+    review = (payload.get("evaluation") or {}).get("manualReview")
+
+    if review and review.get("status") == "WITHDRAWN":
+        payload["originalApprovalStatus"] = payload["approvalStatus"]
+        payload["approvalStatus"] = "WITHDRAWN"
+        payload["auditOnly"] = True
+        payload["manualReview"] = review
+
     return payload
 
 
@@ -385,6 +409,17 @@ def get_intelligence_history_detail(
 
 class CopilotRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
+    previousQuestions: list[
+        Annotated[
+            str,
+            StringConstraints(
+                strip_whitespace=True,
+                min_length=1,
+                max_length=500,
+            ),
+        ]
+    ] = PydanticField(default_factory=list, max_length=3)
 
     periodStart: date | None = None
     periodEndExclusive: date | None = None
@@ -411,6 +446,63 @@ def ask_copilot(request: CopilotRequest):
         question=request.question,
     )
 
+    # Simple conversations do not require model inference.
+    from backend.analytics.intent_router import (
+        INTENT_ROUTER_VERSION,
+        answer_conversational_message,
+    )
+
+    chat_answer = answer_conversational_message(request.question)
+
+    if chat_answer is not None:
+        payload = build_public_response(None, context)
+
+        payload.update(
+            {
+                "status": "CHAT_ANSWERED",
+                "question": request.question,
+                "chatAnswer": chat_answer,
+                "intentRouterVersion": INTENT_ROUTER_VERSION,
+            }
+        )
+
+        return payload
+
+    from backend.analytics.conversation_context import (
+        answer_followup,
+    )
+
+    if request.previousQuestions:
+        followup = answer_followup(
+            context,
+            request.question,
+            request.previousQuestions,
+        )
+
+        if followup is not None:
+            payload = build_public_response(None, context)
+            payload.update(followup)
+            payload["question"] = request.question
+            return payload
+
+    # Explicit factual questions do not require model inference.
+    from backend.analytics.factual_answers import (
+        answer_factual_question,
+        answer_metric_overview,
+        build_factual_fallback,
+    )
+
+    factual = answer_metric_overview(context, request.question) or answer_factual_question(context)
+
+    if factual is not None:
+        payload = build_public_response(None, context)
+
+        payload.update(factual)
+        payload["status"] = "FACT_ANSWERED"
+        payload["question"] = request.question
+
+        return payload
+
     if not GENERATION_LOCK.acquire(blocking=False):
         raise HTTPException(
             status_code=429,
@@ -421,6 +513,59 @@ def ask_copilot(request: CopilotRequest):
         generator = OllamaProvider.from_environment(
             model=generator_model,
         )
+
+        from backend.ai_intelligence.planning.intent_planner import (
+            PLANNER_VERSION,
+            plan_question,
+        )
+        from backend.ai_intelligence.planning.tool_executor import (
+            TOOL_EXECUTOR_VERSION,
+            execute_plan,
+        )
+        from backend.ai_intelligence.providers.ollama import (
+            LLMProviderError,
+        )
+
+        try:
+            plan = plan_question(
+                context,
+                request.question,
+                request.previousQuestions,
+                generator,
+            )
+
+            tool_result = execute_plan(plan, context)
+
+        except LLMProviderError, ValueError:
+            payload = build_public_response(None, context)
+            payload.update(
+                {
+                    "status": "CHAT_ANSWERED",
+                    "question": request.question,
+                    "chatAnswer": (
+                        "I couldn't reliably determine which "
+                        "information you need. Could you rephrase "
+                        "your question or specify the metric?"
+                    ),
+                    "intentPlannerVersion": PLANNER_VERSION,
+                    "plannerStatus": "UNRESOLVED",
+                }
+            )
+            return payload
+
+        planner_metadata = {
+            "intentPlannerVersion": PLANNER_VERSION,
+            "toolExecutorVersion": TOOL_EXECUTOR_VERSION,
+            "plannerStatus": "VALIDATED",
+            "intentPlan": plan.model_dump(mode="json"),
+        }
+
+        if tool_result is not None:
+            payload = build_public_response(None, context)
+            payload.update(tool_result)
+            payload.update(planner_metadata)
+            payload["question"] = request.question
+            return payload
 
         evaluator = OllamaProvider.from_environment(
             model=evaluator_model,
@@ -437,6 +582,8 @@ def ask_copilot(request: CopilotRequest):
 
         payload["question"] = request.question
 
+        payload.update(planner_metadata)
+
         record = result.record
 
         # Distinguish legitimate abstention from failed validation.
@@ -445,6 +592,45 @@ def ask_copilot(request: CopilotRequest):
             and record["deterministicValidationPassed"]
         ):
             payload["status"] = "INSUFFICIENT_EVIDENCE"
+
+        elif payload["status"] != "AUTO_APPROVED":
+            fallback = build_factual_fallback(context)
+
+            if fallback is None:
+                from backend.ai_intelligence.planning.tool_executor import (
+                    metric_answer,
+                )
+
+                selected_plan = payload.get("intentPlan") or {}
+
+                if selected_plan.get("action") == "INVESTIGATE":
+                    selected_metrics = set(selected_plan.get("metricIds", []))
+
+                    facts = metric_answer(
+                        context,
+                        selected_metrics,
+                        "COMPARISON",
+                    )
+
+                    evidence = [
+                        item
+                        for item in facts.get("evidence", [])
+                        if item["currentValue"] is not None
+                    ]
+
+                    if evidence:
+                        fallback = {
+                            "factFallback": (
+                                "A reliable explanation could not be "
+                                "validated. The verified metric comparisons "
+                                "are provided below. They do not establish "
+                                "the underlying cause."
+                            ),
+                            "evidence": evidence,
+                        }
+
+            if fallback is not None:
+                payload.update(fallback)
 
         return payload
 

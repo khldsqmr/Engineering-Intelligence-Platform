@@ -48,6 +48,7 @@ class OllamaProvider:
         allowed_urls = {
             "http://127.0.0.1:11434",
             "http://localhost:11434",
+            "http://host.docker.internal:11434",
         }
 
         if base_url not in allowed_urls:

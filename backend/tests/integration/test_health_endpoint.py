@@ -28,5 +28,5 @@ async def test_health_endpoint() -> None:
     assert response.json() == {
         "service": "Engineering Intelligence Platform",
         "status": "healthy",
-        "version": version("codepulse"),
+        "version": version("engineering-intelligence-platform"),
     }

@@ -244,7 +244,11 @@ export function IntelligenceEvaluationDetails({
                   />
 
                   <div className="assessment-total">
-                    <span>Final Evaluation Score</span>
+                    <span>
+                      {record.evaluatorModel === 'deterministic-report'
+                        ? 'Deterministic Validation Score'
+                        : 'Final Evaluation Score'}
+                    </span>
                     <strong>
                       {formatValue(record.evaluationScore)}/100
                     </strong>
