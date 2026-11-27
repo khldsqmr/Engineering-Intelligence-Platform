@@ -13,9 +13,9 @@ build-backend = "setuptools.build_meta"
 # ------------------------------------------------------------
 
 [project]
-name = "codepulse"
+name = "engineering-intelligence-platform"
 version = "0.1.0"
-description = "AI-powered engineering intelligence platform"
+description = "Engineering collaboration analytics and evidence-grounded AI intelligence"
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
 
@@ -55,11 +55,20 @@ development = [
 # 04. Python Package Discovery
 # ------------------------------------------------------------
 
+[tool.setuptools]
+include-package-data = false
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["backend*"]
 exclude = ["backend.tests*"]
 namespaces = false
+
+# 04.01. SQL Package Data
+# ------------------------------------------------------------
+
+[tool.setuptools.package-data]
+"backend.data_engineering" = ["sql/*/*.sql"]
 
 
 # 05. Code Quality and Formatting

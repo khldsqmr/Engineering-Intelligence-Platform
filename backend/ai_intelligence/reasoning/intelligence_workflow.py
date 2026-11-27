@@ -37,6 +37,8 @@ def run_intelligence(
     context: IntelligenceContext,
     generator: OllamaProvider,
     evaluator: OllamaProvider,
+    *,
+    retry_feedback: tuple[str, ...] = (),
 ) -> IntelligenceResult:
     """Generate, validate and evaluate analytical intelligence."""
 
@@ -44,6 +46,7 @@ def run_intelligence(
         draft = generate_narrative(
             context,
             generator,
+            **({"retry_feedback": retry_feedback} if retry_feedback else {}),
         )
 
     except LLMProviderError:

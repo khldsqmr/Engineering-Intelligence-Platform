@@ -49,6 +49,7 @@ export type IntelligenceStatus =
   | 'EVALUATION_FAILED'
 
 export interface NarrativeResponse {
+  evaluatorModel?: string | null
   repository: string
   periodStart: string
   periodEndExclusive: string

@@ -433,3 +433,119 @@
   margin-left: auto;
   font-size: 9px;
 }
+
+/* Governed analytical observations */
+
+.intelligence-facts-scroll {
+  overflow-x: auto;
+}
+
+.intelligence-facts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.intelligence-facts-table th,
+.intelligence-facts-table td {
+  padding: 11px 12px;
+  text-align: right;
+  border-bottom: 1px solid
+    color-mix(in srgb, currentColor 12%, transparent);
+  white-space: nowrap;
+}
+
+.intelligence-facts-table th {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.intelligence-facts-table th:first-child,
+.intelligence-facts-table td:first-child {
+  text-align: left;
+}
+
+.intelligence-facts-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.intelligence-fact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.intelligence-fact-link:hover {
+  text-decoration: underline;
+}
+
+/* Intelligence-first workspace */
+
+.intelligence-split-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.intelligence-primary-column,
+.intelligence-reference-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.intelligence-reference-column .intelligence-evidence-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.intelligence-reference-column .intelligence-card-header {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.intelligence-reference-column .intelligence-facts-table {
+  width: 100%;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.intelligence-reference-column .intelligence-facts-table th,
+.intelligence-reference-column .intelligence-facts-table td {
+  padding: 10px 5px;
+  vertical-align: middle;
+}
+
+.intelligence-reference-column .intelligence-fact-link {
+  white-space: normal;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.intelligence-reference-column .intelligence-fact-link svg {
+  flex-shrink: 0;
+}
+
+.intelligence-facts-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.intelligence-facts-only .intelligence-primary-column {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .intelligence-split-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -370,3 +370,11 @@
   background: var(--brand-primary);
   color: #ffffff;
 }
+
+
+.history-reuse-note {
+  display: block;
+  padding: 8px 0;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}

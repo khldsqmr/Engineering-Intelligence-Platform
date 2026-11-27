@@ -67,7 +67,7 @@ export function IntelligenceHistoryPage() {
 
 
   const query = useQuery({
-    queryKey: ['intelligence-history', 'library'],
+    queryKey: ['intelligence-history', 'library', 'all'],
 
     queryFn: async ({ signal }) => {
       const first = await getIntelligenceHistory(100, 0, signal)
@@ -153,8 +153,8 @@ export function IntelligenceHistoryPage() {
 
             <p>
               {showArchive
-                ? 'Unapproved generation attempts retained for audit and diagnostics.'
-                : 'Previously approved intelligence across all reporting periods.'}
+                ? 'Unapproved narrative and Copilot executions retained for audit.'
+                : 'Approved narratives and Copilot responses across all reporting periods.'}
             </p>
           </div>
 
@@ -207,11 +207,12 @@ export function IntelligenceHistoryPage() {
                   <thead>
                     <tr>
                       <th scope="col">Reporting Period</th>
+                      <th scope="col">Interaction</th>
                       <th scope="col">Generated (UTC)</th>
                       <th scope="col">Decision</th>
                       <th scope="col">Quality</th>
                       <th scope="col">Confidence</th>
-                      <th scope="col">Reuse Eligible</th>
+                      <th scope="col">Reuse Eligible*</th>
                       <th scope="col">Details</th>
                     </tr>
                   </thead>
@@ -231,6 +232,12 @@ export function IntelligenceHistoryPage() {
                           )}
                         </th>
 
+                        <td title={record.question ?? undefined}>
+                          {record.intelligenceMode === 'question'
+                            ? 'Copilot'
+                            : 'Narrative'}
+                        </td>
+
                         <td>{formatCreatedAt(record.createdAt)}</td>
 
                         <td>
@@ -243,7 +250,9 @@ export function IntelligenceHistoryPage() {
                         </td>
 
                         <td className="history-numeric">
-                          {record.evaluationScore ?? 'N/A'}
+                          {record.evaluatorModel === 'deterministic-report'
+                            ? 'Passed'
+                            : (record.evaluationScore ?? 'N/A')}
                         </td>
 
                         <td className="history-numeric">
@@ -316,6 +325,11 @@ export function IntelligenceHistoryPage() {
             </footer>
           </>
         )}
+
+        <small className="history-reuse-note">
+          * Eligibility at generation time, subject to current
+          methodology and compatibility rules.
+        </small>
 
         <div className="history-archive-navigation">
           <button

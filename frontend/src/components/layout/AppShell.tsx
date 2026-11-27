@@ -1,3 +1,4 @@
+import { Copilot } from '../../features/intelligence/copilot/Copilot'
 import { useEffect, useState } from 'react'
 
 import {
@@ -232,6 +233,8 @@ export function AppShell() {
         <main className="workspace-content">
           <Outlet />
         </main>
+
+        <Copilot />
 
       </div>
     </div>

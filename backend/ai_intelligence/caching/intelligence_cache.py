@@ -30,6 +30,18 @@ from backend.data_engineering.database.connection import (
 )
 
 
+def stable_context(payload: str, *, model_input: bool = False) -> dict:
+    """Compare analytical context independently of generation history."""
+    data = json.loads(payload)
+
+    data.pop("historicalContext", None)
+
+    if model_input:
+        data.pop("regenerationFeedback", None)
+
+    return data
+
+
 def find_cached_intelligence(
     context: IntelligenceContext,
     database_path: str | Path,
@@ -37,7 +49,7 @@ def find_cached_intelligence(
     generator_model: str,
     evaluator_model: str,
 ) -> dict | None:
-    """Return approved intelligence for an identical analytical context."""
+    """Return approved intelligence for a compatible analytical context."""
 
     # User-driven questions are not cached in the initial implementation.
     if context.userIntent.mode != "narrative":
@@ -51,7 +63,7 @@ def find_cached_intelligence(
     )
 
     with open_database(database_path) as connection:
-        row = connection.execute(
+        rows = connection.execute(
             f"""
             SELECT *
             FROM {HISTORY_TABLE}
@@ -67,13 +79,21 @@ def find_cached_intelligence(
               AND deterministicValidationPassed = 1
               AND eligibleForHistoricalContext = 1
 
-              AND contextSnapshotJson = ?
-              AND modelInputJson = ?
 
               AND generatorModel = ?
               AND generatorPromptVersion = ?
-              AND evaluatorModel = ?
-              AND evaluatorPromptVersion = ?
+              AND (
+                  (
+                      evaluatorModel = ?
+                      AND evaluatorPromptVersion = ?
+                  )
+                  OR (
+                      evaluatorModel = 'deterministic-report'
+                      AND evaluatorPromptVersion = 'deterministic-report.2'
+                      AND (hypothesis IS NULL OR confidenceScore IS NOT NULL)
+                      AND evaluationScore = 100
+                  )
+              )
               AND evaluationVersion = ?
               AND evaluationScore >= ?
 
@@ -87,15 +107,13 @@ def find_cached_intelligence(
 
             ORDER BY createdAt DESC, intelligenceId DESC
 
-            LIMIT 1
+
             """,
             (
                 context.repositoryId,
                 context.temporalContext.periodStart,
                 context.temporalContext.periodEndExclusive,
                 context.ingestionRunId,
-                context.model_dump_json(),
-                model_input,
                 generator_model,
                 PROMPT_VERSION,
                 evaluator_model,
@@ -104,6 +122,27 @@ def find_cached_intelligence(
                 APPROVAL_THRESHOLD,
                 CONFIDENCE_VERSION,
             ),
-        ).fetchone()
+        ).fetchall()
 
-    return dict(row) if row is not None else None
+    expected_context = stable_context(context.model_dump_json())
+
+    expected_input = stable_context(
+        model_input,
+        model_input=True,
+    )
+
+    for row in rows:
+        if row["modelInputJson"] is None:
+            continue
+
+        saved_context = stable_context(row["contextSnapshotJson"])
+
+        saved_input = stable_context(
+            row["modelInputJson"],
+            model_input=True,
+        )
+
+        if saved_context == expected_context and saved_input == expected_input:
+            return dict(row)
+
+    return None

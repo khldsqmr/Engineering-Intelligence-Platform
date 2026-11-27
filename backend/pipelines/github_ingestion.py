@@ -202,11 +202,7 @@ async def run_ingestion(
 
     token = environment.get("GITHUB_TOKEN")
     repository = environment.get("GITHUB_REPOSITORY")
-    database_path = (
-        database_path
-        or environment.get("DATABASE_PATH")
-        or "data/eip.db"
-    )
+    database_path = database_path or environment.get("DATABASE_PATH") or "data/eip.db"
 
     if not token or not repository:
         raise RuntimeError("GitHub configuration is missing.")

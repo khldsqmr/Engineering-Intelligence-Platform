@@ -5,7 +5,7 @@ from backend.ai_intelligence.reasoning.intelligence_engine import (
 )
 
 
-def test_narrative_prompt_remains_unchanged():
+def test_narrative_prompt_uses_focused_reasoning():
     original = "Existing engineering analyst prompt."
 
     result = build_generation_system_prompt(
@@ -13,7 +13,12 @@ def test_narrative_prompt_remains_unchanged():
         "narrative",
     )
 
-    assert result == original
+    assert result != original
+    assert "prioritySignals" in result
+    assert "observationRefs" in result
+    assert "Do not generate an observation field" in result
+    assert "Never invent, independently calculate" in result
+    assert "authoritative Gold values" in result
 
 
 def test_question_prompt_distinguishes_uncertainty_from_abstention():

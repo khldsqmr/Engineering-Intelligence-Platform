@@ -5,6 +5,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
+from backend.ai_intelligence.numerical_grounding import (
+    NUMERICAL_GROUNDING_VERSION,
+)
 from backend.ai_intelligence.reasoning.intelligence_workflow import (
     IntelligenceResult,
 )
@@ -38,6 +41,15 @@ def save_intelligence(
 
     history_ids = [item.intelligenceId for item in context.historicalContext]
 
+    evaluation_snapshot = evaluation.model_dump(mode="json")
+
+    if draft and draft.templateOutput is not None:
+        evaluation_snapshot["numericalGrounding"] = {
+            "version": NUMERICAL_GROUNDING_VERSION,
+            "validationPassed": draft.validationPassed,
+            "template": draft.templateOutput.model_dump(mode="json"),
+        }
+
     record = {
         # 01. Identification
         "intelligenceId": intelligence_id,
@@ -70,7 +82,7 @@ def save_intelligence(
         "evaluatorPromptVersion": (evaluation.evaluatorPromptVersion),
         "evaluatorLatencySeconds": (evaluation.evaluatorLatencySeconds),
         "evaluationScore": evaluation.evaluationScore,
-        "evaluationJson": evaluation.model_dump_json(),
+        "evaluationJson": json.dumps(evaluation_snapshot),
         # 06. Confidence
         "confidenceVersion": (confidence.confidenceVersion if confidence else None),
         "confidenceScore": (confidence.confidenceScore if confidence else None),

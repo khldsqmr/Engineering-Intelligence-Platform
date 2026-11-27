@@ -53,6 +53,38 @@ def evaluate_draft(
             findings=["No reusable analytical narrative was generated."],
         )
 
+    # Evaluate application-rendered factual reports deterministically.
+
+    output = draft.generation.output
+
+    if (
+        mode == "narrative"
+        and getattr(draft, "deterministicObservation", False)
+        and output.narrative is not None
+        and (output.hypothesis is None or getattr(draft, "deterministicHypothesis", False))
+        and not output.alternativeExplanations
+        and output.recommendedInvestigation is None
+    ):
+        return EvaluationOutcome(
+            evaluationVersion=EVALUATION_VERSION,
+            approvalStatus="AUTO_APPROVED",
+            evaluationScore=100.0,
+            deterministicValidationPassed=True,
+            eligibleForHistoricalContext=True,
+            evaluatorModel="deterministic-report",
+            evaluatorPromptVersion="deterministic-report.2",
+            evaluatorLatencySeconds=0.0,
+            findings=[
+                "Application-rendered report passed deterministic "
+                "validation. "
+                + (
+                    "Hypothesis rendered from a supported evidence pattern."
+                    if output.hypothesis is not None
+                    else "No hypothesis was included."
+                )
+            ],
+        )
+
     # 03. Assemble independent evaluation context.
 
     evaluation_input = json.dumps(

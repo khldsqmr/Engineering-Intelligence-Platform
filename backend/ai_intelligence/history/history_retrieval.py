@@ -79,7 +79,15 @@ def retrieve_historical_context(
                   AND contextVersion = ?
                   AND metricVersionsJson = ?
                   AND evaluationVersion = ?
-                  AND evaluatorPromptVersion = ?
+                  AND (
+                      evaluatorPromptVersion = ?
+                      OR (
+                          evaluatorModel = 'deterministic-report'
+                          AND evaluatorPromptVersion = 'deterministic-report.2'
+                          AND (hypothesis IS NULL OR confidenceScore IS NOT NULL)
+                          AND evaluationScore = 100
+                      )
+                  )
                   AND generatorPromptVersion = ?
                   AND evaluationScore >= ?
                   AND narrative IS NOT NULL
