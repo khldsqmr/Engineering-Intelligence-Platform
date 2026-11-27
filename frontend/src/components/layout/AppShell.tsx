@@ -21,8 +21,8 @@ import {
   navigationItems,
 } from './navigation'
 
-import { getHealth } from '../services/healthService'
-import type { HealthResponse } from '../types/health'
+import { getHealth } from '../../services/healthService'
+import type { HealthResponse } from '../../types/health'
 
 
 export function AppShell() {

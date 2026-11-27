@@ -7,12 +7,12 @@ import {
   Sunset,
 } from 'lucide-react'
 
-import { useTheme } from '../providers/theme-context'
+import { useTheme } from '../../providers/theme-context'
 
 import type {
   Appearance,
   Palette,
-} from '../providers/theme-context'
+} from '../../providers/theme-context'
 
 import './AppearanceControls.css'
 

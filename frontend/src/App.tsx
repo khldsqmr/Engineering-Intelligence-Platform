@@ -5,8 +5,8 @@ import {
   Routes,
 } from 'react-router-dom'
 
-import { AppShell } from './components/AppShell'
-import { navigationGroups } from './components/navigation'
+import { AppShell } from './components/layout/AppShell'
+import { navigationGroups } from './components/layout/navigation'
 import { WorkspacePage } from './pages/WorkspacePage'
 
 import './App.css'

@@ -1,6 +1,6 @@
 import { Layers3 } from 'lucide-react'
 
-import { PageHeader } from '../components/PageHeader'
+import { PageHeader } from '../components/layout/PageHeader'
 
 interface WorkspacePageProps {
   category: string
