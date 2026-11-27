@@ -2,6 +2,10 @@
 
 from dataclasses import dataclass
 
+from backend.ai_intelligence.confidence.confidence import (
+    HypothesisConfidence,
+    calculate_confidence,
+)
 from backend.ai_intelligence.context.context_schema import (
     IntelligenceContext,
 )
@@ -26,6 +30,7 @@ class IntelligenceResult:
     context: IntelligenceContext
     draft: NarrativeDraft | None
     evaluation: EvaluationOutcome
+    confidence: HypothesisConfidence | None = None
 
 
 def run_intelligence(
@@ -58,8 +63,20 @@ def run_intelligence(
         mode=context.userIntent.mode,
     )
 
+    confidence = None
+
+    hypothesis = draft.generation.output.hypothesis
+
+    if evaluation.approvalStatus == "AUTO_APPROVED" and hypothesis is not None:
+        confidence = calculate_confidence(
+            hypothesis,
+            context.analyticalContext,
+            context.qualityContext.sourceCoverage,
+        )
+
     return IntelligenceResult(
         context=context,
         draft=draft,
         evaluation=evaluation,
+        confidence=confidence,
     )

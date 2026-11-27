@@ -52,6 +52,8 @@ SCHEMA_FILES = (
     # Gold layer
     "03_gold/01_eip_tbl_gold_prLifecycle_wide.sql",
     "03_gold/02_eip_tbl_gold_periodFacts_long.sql",
+    # AI Intelligence layer
+    "04_ai/01_eip_tbl_ai_intelligenceHistory_log.sql",
 )
 
 # ---------------------------------------------------------------------
